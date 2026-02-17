@@ -1,0 +1,101 @@
+{
+  "projectType": "frontend",
+  "projectName": "Trojan Marketplace",
+  "projectDescription": "A React-based marketplace application for USC students to buy and sell items on campus",
+  "theme": "almond",
+  "primaryColor": "#990000",
+  "lightColor": "#FCC901",
+  "darkColor": "#900000",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "installation"
+            ]
+          },
+          {
+            "group": "Core Features",
+            "pages": [
+              "features/authentication",
+              "features/marketplace-feed",
+              "features/item-listings",
+              "features/messaging",
+              "features/user-profiles",
+              "features/transactions"
+            ]
+          },
+          {
+            "group": "Components",
+            "pages": [
+              "components/navbar",
+              "components/home",
+              "components/feed",
+              "components/profile",
+              "components/create-sale",
+              "components/purchase-item",
+              "components/message"
+            ]
+          },
+          {
+            "group": "Development",
+            "pages": [
+              "development/setup",
+              "development/architecture",
+              "development/styling",
+              "development/backend-integration"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Backend Endpoints",
+            "pages": [
+              "api/authentication",
+              "api/items",
+              "api/users"
+            ]
+          },
+          {
+            "group": "Component APIs",
+            "pages": [
+              "api/component-props",
+              "api/routing"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "User authentication and account creation",
+    "Browse marketplace feed with item listings",
+    "Create and publish sale listings",
+    "In-app messaging between buyers and sellers",
+    "User profiles with purchase and sales history",
+    "Integrated payment options (CashApp, PayPal)",
+    "Campus-specific meetup locations",
+    "Responsive React-based interface"
+  ],
+  "publicApiSurface": [
+    "LoginServlet - POST /Final_Project/LoginServlet",
+    "CreateAccountServlet - POST /Final_Project/CreateAccountServlet",
+    "ItemFetchServlet - GET /Final_Project/ItemFetchServlet",
+    "AddItemServlet - POST /Final_Project/AddItemServlet",
+    "Home Component - Landing page with USC branding",
+    "Feed Component - Display marketplace items",
+    "CreateSale Component - Form to list new items",
+    "PurchaseItem Component - Item purchase interface",
+    "Profile Component - User profile with transaction history",
+    "Message Component - Messaging interface",
+    "Navbar Component - Navigation with authentication state"
+  ]
+}
