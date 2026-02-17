@@ -355,7 +355,7 @@ background-color: #f9d440;  // From PurchaseItem.js:77
 
 ### Accent Colors
 
-```jsx
+```javascript
 // Blue (primary actions)
 background-color: #304ffe;  // From Feed.js:62
 background-color: #536dfe;  // Hover state
@@ -367,7 +367,7 @@ background-color: #3e8e41;  // Hover state
 
 ### Neutral Colors
 
-```jsx
+```javascript
 // Gray tones
 color: #939292;      // Subtext from Profile.js:140
 color: #777777;      // Item titles from Profile.js:137
@@ -381,7 +381,7 @@ background-color: #e6e6e6;  // Input backgrounds
 
 From `Profile.js:67-75`, common centered layout:
 
-```jsx
+```javascript
 const OuterContainer = styled.div`
   width: 700px;
   background-color: #efefee;
@@ -397,7 +397,7 @@ const OuterContainer = styled.div`
 
 From `Message.js:50-89`, scrollable content area:
 
-```jsx
+```javascript
 const MessagesContainer = styled.div`
   flex: 1;
   padding: 20px;
@@ -422,7 +422,7 @@ const MessagesContainer = styled.div`
 
 From `Profile.js:148-153`, absolute positioning within relative parent:
 
-```jsx
+```javascript
 const MoneyText = styled.p`
   position: absolute;
   top: 20px;
@@ -436,7 +436,7 @@ const MoneyText = styled.p`
 
 From `Login.js:35-36`, max-width for mobile:
 
-```jsx
+```javascript
 form {
   width: 400px;
   max-width: 90%;  /* Responsive for mobile */
@@ -449,7 +449,7 @@ form {
 
 From `Profile.js:163-168`:
 
-```jsx
+```javascript
 const CircularImage = styled.img`
   border-radius: 50%;
   width: 80px;
@@ -462,7 +462,7 @@ const CircularImage = styled.img`
 
 From `Profile.js:169-173`:
 
-```jsx
+```javascript
 const ItemImage = styled.img`
   width: 100px;
   height: 100px;
@@ -486,7 +486,7 @@ From `Home.css:8-13`:
   <Step title="Co-locate styles">
     Define styled components near where they're used, at the bottom of component files.
     
-    ```jsx
+    ```javascript
     function MyComponent() {
       return <StyledDiv>Content</StyledDiv>;
     }
@@ -502,7 +502,7 @@ From `Home.css:8-13`:
   <Step title="Use semantic naming">
     Name styled components based on their purpose:
     
-    ```jsx
+    ```javascript
     // Good
     const PrimaryButton = styled.button`...`;
     const UserAvatar = styled.img`...`;
@@ -516,7 +516,7 @@ From `Home.css:8-13`:
   <Step title="Group related styles">
     Keep related styled components together:
     
-    ```jsx
+    ```javascript
     // All form-related styles
     const FormContainer = styled.form`...`;
     const FormInput = styled.input`...`;
@@ -527,7 +527,7 @@ From `Home.css:8-13`:
   <Step title="Avoid !important">
     Use specificity instead of `!important` unless absolutely necessary:
     
-    ```jsx
+    ```javascript
     // Only use !important for overriding third-party styles
     border-radius: 20px !important;  // From Message.js:105
     ```

@@ -31,7 +31,7 @@ sequenceDiagram
 ### Base URL
 
 All servlets are hosted at:
-```
+```text
 http://localhost:8080/Final_Project/
 ```
 
@@ -306,7 +306,7 @@ function CreateSale() {
 
 All POST requests use URL-encoded form data:
 
-```jsx
+```javascript
 headers: {
   "Content-Type": "application/x-www-form-urlencoded",
 }
@@ -316,7 +316,7 @@ headers: {
 
 From the codebase, the pattern for request bodies:
 
-```jsx
+```javascript
 // Single parameter
 `username=${encodeURIComponent(username)}`
 
@@ -337,7 +337,7 @@ From the codebase, the pattern for request bodies:
 
 Login/CreateAccount servlets return boolean:
 
-```jsx
+```javascript
 if (response.data === true) {
   // Success case
 } else {
@@ -349,7 +349,7 @@ if (response.data === true) {
 
 ItemFetchServlet returns array of objects:
 
-```jsx
+```javascript
 const response = await axios.get("...");
 setItems(response.data);  // response.data is an array
 ```
@@ -360,7 +360,7 @@ setItems(response.data);  // response.data is an array
 
 All API calls should use try-catch:
 
-```jsx
+```javascript
 try {
   const response = await axios.post(url, data, config);
   // Handle success
@@ -380,7 +380,7 @@ From `Login.js:133`, conditional error display:
 
 ### Error State Management
 
-```jsx
+```javascript
 const [error, setError] = useState("");
 
 // Clear error on successful request
@@ -398,7 +398,7 @@ if (response.data === true) {
 
 From `Login.js:4` and `Login.js:73`, programmatic navigation:
 
-```jsx
+```javascript
 import { useNavigate } from "react-router-dom";
 
 function MyComponent() {
@@ -415,7 +415,7 @@ function MyComponent() {
 
 ### Common Navigation Patterns
 
-```jsx
+```javascript
 // After successful login
 navigate("/feed");
 
@@ -438,7 +438,7 @@ navigate("/message");
 
 Implement loading indicators:
 
-```jsx
+```javascript
 const [items, setItems] = useState([]);
 const [loading, setLoading] = useState(true);
 
@@ -464,7 +464,7 @@ if (loading) return <div>Loading...</div>;
 
 From `Feed.js:26-33`, pass data through navigation:
 
-```jsx
+```javascript
 function Feed({ modifyItem }) {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -473,6 +473,24 @@ function Feed({ modifyItem }) {
     modifyItem(items[index]);  // Update parent state
     navigate("/purchase-item");  // Navigate to purchase page
   }
+}
+```
+
+The receiving component gets the data via props:
+
+```jsx
+// In Main.js routing
+<Route path="/purchase-item" element={<PurchaseItem item={purchaseItem} />} />
+
+// In PurchaseItem.js
+function PurchaseItem({ item }) {
+  return (
+    <div>
+      <h1>{item.item_name}</h1>
+      <p>{item.item_description}</p>
+      <p>${item.price}</p>
+    </div>
+  );
 }
 ```
 
@@ -519,7 +537,7 @@ response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
 From the codebase, using console.log for debugging:
 
-```jsx
+```javascript
 console.log(response.data);  // Log response
 console.error("Error message:", error);  // Log errors
 ```

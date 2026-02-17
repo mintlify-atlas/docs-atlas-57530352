@@ -61,7 +61,7 @@ Before installing Trojan Marketplace, ensure you have the following installed on
 Clone the Trojan Marketplace repository to your local machine:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/yangleyland/Trojan-Marketplace.git
 cd csci201-final-project
 ```
 
@@ -144,7 +144,7 @@ The Trojan Marketplace frontend requires a Java servlet backend for full functio
 <Steps>
   <Step title="Backend Requirements">
     The application expects the backend server at:
-    ```
+    ```text
     http://localhost:8080/Final_Project/
     ```
     
@@ -155,13 +155,13 @@ The Trojan Marketplace frontend requires a Java servlet backend for full functio
     The following servlets must be implemented and accessible:
     
     **LoginServlet** - Used in `src/Login.js:80`
-    ```
+    ```text
     POST http://localhost:8080/Final_Project/LoginServlet
     ```
     Handles user authentication with username/password
     
     **ItemFetchServlet** - Used in `src/Feed.js:15`
-    ```
+    ```text
     GET http://localhost:8080/Final_Project/ItemFetchServlet
     ```
     Returns array of marketplace items with properties:
@@ -221,7 +221,7 @@ The project uses ESLint with Create React App configuration (`package.json:23-28
 
 To customize the backend URL or other settings, create a `.env` file in the project root:
 
-```bash
+```text
 # .env
 REACT_APP_BACKEND_URL=http://localhost:8080/Final_Project
 PORT=3000
@@ -271,7 +271,7 @@ npm test
 
 After installation, your project structure will look like this:
 
-```
+```text
 csci201-final-project/
 ├── public/
 │   ├── white-usc.png          # USC logo used in navbar

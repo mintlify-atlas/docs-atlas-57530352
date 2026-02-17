@@ -21,7 +21,7 @@ This component does not accept any props. User data is currently hardcoded for d
 
 Displays the user's profile photo, name, class year, and sales statistics:
 
-```javascript
+```jsx
 <InfoContainer>
   <div style={{ display: "flex", gap: "20px" }}>
     <CircularImage src={"/profile-photo.webp"} alt="Profile" />
@@ -55,7 +55,7 @@ Displays a list of items the user has purchased with:
 - Purchase date
 - Purchase price
 
-```javascript
+```jsx
 <PurchaseDiv>
   <PurchaseHeaderContainer>Purchases</PurchaseHeaderContainer>
   {items.map((item) => (
@@ -75,7 +75,7 @@ Displays a list of items the user has purchased with:
 
 Displays a list of items the user has sold with the same structure as purchases:
 
-```javascript
+```jsx
 <SalesDiv>
   <SalesHeaderContainer>Sales</SalesHeaderContainer>
   {items.map((item) => (
@@ -137,6 +137,13 @@ const SalesHeaderContainer = styled(PurchaseHeaderContainer)`
 `;
 ```
 
+**Sales Header:**
+```javascript
+const SalesHeaderContainer = styled(PurchaseHeaderContainer)`
+  background-color: #bd7678; // Rose
+`;
+```
+
 ## Item Card Layout
 
 Each transaction item is displayed in a consistent card format:
@@ -164,6 +171,16 @@ const CircularImage = styled.img`
   border-radius: 50%;
   width: 80px;
   height: 80px;
+  object-fit: cover;
+`;
+```
+
+### Item Image
+
+```javascript
+const ItemImage = styled.img`
+  width: 100px;
+  height: 100px;
   object-fit: cover;
 `;
 ```

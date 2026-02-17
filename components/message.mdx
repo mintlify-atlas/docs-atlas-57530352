@@ -38,7 +38,7 @@ The Message component (MessagingPage) provides a chat-style interface for buyers
 
 Shows the item being discussed at the top of the conversation:
 
-```javascript
+```jsx
 <InfoContainer>
   <div style={{ display: "flex", gap: "20px" }}>
     <SquareImage src={"/v3_87.png"} alt="couch" />
@@ -61,7 +61,7 @@ Shows the item being discussed at the top of the conversation:
 
 Shows conversation with distinct styling for sent and received messages:
 
-```javascript
+```jsx
 <MessagesContainer>
   <div class="timestamp">09:10 AM</div>
   <div className="message-received">
@@ -81,7 +81,7 @@ Shows conversation with distinct styling for sent and received messages:
 **Message Styles:**
 
 **Received Messages** (from seller):
-```javascript
+```css
 .message-received {
   width: 100%;
   display: flex;
@@ -94,6 +94,24 @@ Shows conversation with distinct styling for sent and received messages:
   padding: 10px;
   margin: 2px;
   border-radius: 20px;
+}
+```
+
+**Sent Messages** (from buyer):
+```css
+.message-sent {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message-sent span {
+  width: fit-content;
+  padding: 10px;
+  margin: 2px;
+  border-radius: 20px;
+  background: #fcc901; // USC gold
+  margin-right: 0;
 }
 ```
 
@@ -123,7 +141,7 @@ The component includes hardcoded sample messages ("Hi, Tommy!" and "How are you?
 
 Provides an input field and send button:
 
-```javascript
+```jsx
 <MessageForm onSubmit={handleMessageSubmit}>
   <MessageInput
     type="text"
@@ -211,6 +229,23 @@ const MessageInput = styled.input`
   width: 100%;
   background: #e6e6e6;
   border-radius: 20px !important;
+`;
+```
+
+### Send Button
+
+```javascript
+const SendMessageButton = styled.button`
+  background-color: #304ffe;
+  :hover {
+    background-color: #536dfe;
+  }
+  margin-top: 5px;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 `;
 ```
 
