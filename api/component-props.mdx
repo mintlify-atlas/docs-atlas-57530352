@@ -1,0 +1,164 @@
+---
+title: 'Component Props'
+description: 'Reference for all component props in the Trojan Marketplace'
+---
+
+This page documents the props accepted by each component in the Trojan Marketplace application.
+
+## Feed Component
+
+The Feed component displays the marketplace item listings.
+
+<ParamField path="modifyItem" type="function" required>
+  Callback function to update the selected item for purchase or messaging. Called with the item object when a user clicks "Buy Now" or "Message".
+  
+  **Signature:** `modifyItem(item: object) => void`
+  
+  **Example:**
+  ```javascript
+  function modifyItem(item) {
+    setPurchaseItem(item);
+  }
+  
+  <Feed modifyItem={modifyItem} />
+  ```
+</ParamField>
+
+**Usage Location:** Main.js:35
+
+---
+
+## Login Component
+
+The Login component handles user authentication.
+
+<ParamField path="logIn" type="function" required>
+  Callback function to update the logged-in state when authentication succeeds. Called without arguments after successful login.
+  
+  **Signature:** `logIn() => void`
+  
+  **Example:**
+  ```javascript
+  function logIn() {
+    setLoggedIn(true);
+  }
+  
+  <Login logIn={logIn} />
+  ```
+</ParamField>
+
+**Usage Location:** Main.js:30
+
+---
+
+## PurchaseItem Component
+
+The PurchaseItem component displays item details and payment options.
+
+<ParamField path="item" type="object" required>
+  The item object containing details about the product to purchase.
+  
+  **Properties:**
+  - `item_name` (string): The name of the item
+  - `item_description` (string): Description of the item
+  - `image_url` (string): URL to the item's image
+  - `price` (number): Price of the item
+  
+  **Example:**
+  ```javascript
+  const item = {
+    item_name: "Space Heater",
+    item_description: "Portable space heater in good condition",
+    image_url: "https://example.com/heater.jpg",
+    price: 50
+  };
+  
+  <PurchaseItem item={item} />
+  ```
+</ParamField>
+
+**Usage Location:** Main.js:46
+
+---
+
+## Message Component
+
+The Message component provides messaging functionality between buyers and sellers.
+
+<ParamField path="item" type="object" required>
+  The item object containing details about the product being discussed.
+  
+  **Properties:**
+  - `item_name` (string): The name of the item
+  - `item_description` (string): Description of the item
+  - `image_url` (string): URL to the item's image
+  
+  **Example:**
+  ```javascript
+  const item = {
+    item_name: "Space Heater",
+    item_description: "Portable space heater in good condition",
+    image_url: "https://example.com/heater.jpg"
+  };
+  
+  <Message item={item} />
+  ```
+</ParamField>
+
+**Usage Location:** Main.js:40
+
+---
+
+## Navbar Component
+
+The Navbar component renders the navigation bar with conditional links based on authentication state.
+
+<ParamField path="loggedIn" type="boolean" required>
+  Boolean flag indicating whether the user is currently authenticated. Controls which navigation links are displayed.
+  
+  **Example:**
+  ```javascript
+  <Navbar loggedIn={true} />
+  ```
+  
+  When `loggedIn` is `true`, the navbar displays:
+  - Profile
+  - Create Sale
+  - Feed
+  - Logged In
+  
+  When `loggedIn` is `false`, the navbar displays:
+  - Login
+</ParamField>
+
+**Usage Location:** Main.js:26
+
+---
+
+## Components Without Props
+
+The following components do not accept any props:
+
+- **Home** - Landing page component
+- **Profile** - User profile display component
+- **CreateSale** - Form for creating new sale listings
+- **CreateAccount** - Account creation form component
+
+## State Management
+
+The Main component manages global state and passes it down to child components:
+
+```javascript
+const [purchaseItem, setPurchaseItem] = useState({});
+const [loggedIn, setLoggedIn] = useState(false);
+
+function modifyItem(item) {
+  setPurchaseItem(item);
+}
+
+function logIn() {
+  setLoggedIn(true);
+}
+```
+
+This pattern allows communication between components through shared state in the parent component.

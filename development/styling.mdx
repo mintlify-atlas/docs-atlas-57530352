@@ -1,0 +1,557 @@
+---
+title: "Styling Guide"
+description: "Learn how to style components using styled-components and CSS"
+icon: "palette"
+---
+
+## Styling Approach
+
+Trojan Marketplace uses a **hybrid styling approach**:
+
+1. **Styled-components** - CSS-in-JS for component-specific styles
+2. **Traditional CSS files** - Global styles and complex layouts
+
+## Styled-Components
+
+### Installation
+
+From `package.json:14`, styled-components is included:
+
+```json
+"styled-components": "^5.3.9"
+```
+
+### Basic Usage
+
+Import and create styled components:
+
+```jsx
+import styled from "styled-components";
+
+const Button = styled.button`
+  background-color: #304ffe;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  
+  :hover {
+    background-color: #536dfe;
+  }
+`;
+```
+
+### Real Examples from the Codebase
+
+#### Simple Styled Components
+
+From `Main.js:54-66`, basic styling for layout:
+
+```jsx Main.js
+const Background = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(https://pbs.twimg.com/media/EU8GlrJWsAAZKHx?format=jpg&name=large);
+  background-size: cover;
+  z-index: -1;
+`;
+
+const StyledMain = styled.div`
+  width: 100vw;
+`;
+```
+
+#### Interactive Styled Components
+
+From `Feed.js:61-66`, button with hover state:
+
+```jsx Feed.js
+const StyledButton = styled.button`
+  background-color: #304ffe;
+  :hover {
+    background-color: #536dfe;
+  }
+`;
+```
+
+#### Complex Styled Components
+
+From `Profile.js:58-174`, multi-property components:
+
+```jsx Profile.js
+const OuterContainer = styled.div`
+  width: 700px;
+  background-color: #efefee;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const InfoContainer = styled.div`
+  padding: 10px;
+  height: 100px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const CircularImage = styled.img`
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+`;
+
+const NameText = styled.p`
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+`;
+
+const SubText = styled.p`
+  color: #939292;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin: 0;
+`;
+```
+
+### Extending Styled Components
+
+From `Profile.js:113-115`, extend existing components:
+
+```jsx Profile.js
+const SalesHeaderContainer = styled(PurchaseHeaderContainer)`
+  background-color: #bd7678;
+`;
+```
+
+This inherits all styles from `PurchaseHeaderContainer` and overrides the background color.
+
+### Styled Components with Props
+
+From `Navbar.js:133-138`, components can accept props:
+
+```jsx Navbar.js
+const LinkHeader = styled(Link)`
+  all: unset;
+  :hover {
+    color: gray;
+  }
+`;
+```
+
+## Form Styling Patterns
+
+### Full Form Example
+
+From `Login.js:6-67`, comprehensive form styling:
+
+```jsx Login.js
+const StyledLogin = styled.div`
+  body {
+    font-family: "Lato", sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+  }
+
+  h1 {
+    font-family: "Adobe Devanagari", sans-serif;
+    font-size: 36px;
+    margin: 0 0 40px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    max-width: 90%;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    font-size: 18px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  input[type="submit"] {
+    background-color: #4caf50;
+    color: white;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #3e8e41;
+  }
+`;
+```
+
+### Message Form Components
+
+From `Message.js:91-119`, form input styling:
+
+```jsx Message.js
+const MessageForm = styled.form`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  flex-direction: row;
+  background: #fff;
+  margin-top: -20px;
+`;
+
+const MessageInput = styled.input`
+  flex: 1;
+  margin-right: 10px;
+  width: 100%;
+  background: #e6e6e6;
+  border-radius: 20px !important;
+`;
+
+const SendMessageButton = styled.button`
+  background-color: #304ffe;
+  :hover {
+    background-color: #536dfe;
+  }
+  margin-top: 5px;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
+```
+
+## Traditional CSS Files
+
+### When to Use CSS Files
+
+Use traditional CSS for:
+- Complex layouts (Grid, Flexbox)
+- Global styles
+- Legacy code compatibility
+- Animation keyframes
+
+### Feed Component CSS
+
+From `Feed.js:3`, importing CSS:
+
+```jsx
+import "./Feed.css";
+```
+
+Typical pattern for components with both approaches:
+
+```jsx Feed.js
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./Feed.css";  // Traditional CSS
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";  // Styled-components
+
+function Feed({ modifyItem }) {
+  return (
+    <div className="rectangles-wrapper">  {/* CSS class */}
+      <div className="rectangles-container">  {/* CSS class */}
+        {items.map((item, index) => (
+          <div className="rectangle">  {/* CSS class */}
+            <StyledButton>Message</StyledButton>  {/* Styled component */}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const StyledButton = styled.button`
+  background-color: #304ffe;
+`;
+```
+
+### Home Component CSS
+
+From `Home.css:1-32`, traditional CSS layout:
+
+```css Home.css
+.container {
+  position: relative;
+  height: 100%;
+}
+
+.image {
+  flex: 1;
+}
+
+.image img {
+  max-width: 100%;
+}
+
+.rectangles {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+  width: 625px;
+}
+
+.rectangle {
+  flex: 1;
+  background-color: lightgray;
+  margin-right: 10px;
+  border-radius: 10px;
+}
+
+.rectangle:first-child {
+  margin-bottom: 20px;
+}
+```
+
+## USC Brand Colors
+
+The application uses USC's official colors:
+
+### Primary Colors
+
+```jsx
+// Cardinal Red
+background-color: #900;  // From Navbar.js:38
+
+// Gold
+background-color: #fcc901;  // From Message.js:86
+background-color: #efd365;  // From Profile.js:103
+background-color: #f9d440;  // From PurchaseItem.js:77
+```
+
+### Accent Colors
+
+```jsx
+// Blue (primary actions)
+background-color: #304ffe;  // From Feed.js:62
+background-color: #536dfe;  // Hover state
+
+// Green (success/submit)
+background-color: #4caf50;  // From Login.js:51
+background-color: #3e8e41;  // Hover state
+```
+
+### Neutral Colors
+
+```jsx
+// Gray tones
+color: #939292;      // Subtext from Profile.js:140
+color: #777777;      // Item titles from Profile.js:137
+background-color: #efefee;  // Container backgrounds
+background-color: #e6e6e6;  // Input backgrounds
+```
+
+## Layout Patterns
+
+### Centered Container Pattern
+
+From `Profile.js:67-75`, common centered layout:
+
+```jsx
+const OuterContainer = styled.div`
+  width: 700px;
+  background-color: #efefee;
+  margin: 0 auto;  /* Centers horizontally */
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+```
+
+### Flexbox Layouts
+
+From `Message.js:50-89`, scrollable content area:
+
+```jsx
+const MessagesContainer = styled.div`
+  flex: 1;
+  padding: 20px;
+  overflow-y: scroll;
+  background: #fff;
+  
+  .message-received {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .message-sent {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+`;
+```
+
+### Positioning Patterns
+
+From `Profile.js:148-153`, absolute positioning within relative parent:
+
+```jsx
+const MoneyText = styled.p`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #939292;
+  font-size: 1.2em;
+`;
+```
+
+## Responsive Design
+
+From `Login.js:35-36`, max-width for mobile:
+
+```jsx
+form {
+  width: 400px;
+  max-width: 90%;  /* Responsive for mobile */
+}
+```
+
+## Image Styling
+
+### Circular Profile Images
+
+From `Profile.js:163-168`:
+
+```jsx
+const CircularImage = styled.img`
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+`;
+```
+
+### Square Item Images
+
+From `Profile.js:169-173`:
+
+```jsx
+const ItemImage = styled.img`
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+`;
+```
+
+### Responsive Images
+
+From `Home.css:8-13`:
+
+```css
+.image img {
+  max-width: 100%;
+}
+```
+
+## Component Styling Best Practices
+
+<Steps>
+  <Step title="Co-locate styles">
+    Define styled components near where they're used, at the bottom of component files.
+    
+    ```jsx
+    function MyComponent() {
+      return <StyledDiv>Content</StyledDiv>;
+    }
+    
+    const StyledDiv = styled.div`
+      /* styles */
+    `;
+    
+    export default MyComponent;
+    ```
+  </Step>
+
+  <Step title="Use semantic naming">
+    Name styled components based on their purpose:
+    
+    ```jsx
+    // Good
+    const PrimaryButton = styled.button`...`;
+    const UserAvatar = styled.img`...`;
+    
+    // Avoid
+    const Div1 = styled.div`...`;
+    const BlueButton = styled.button`...`;
+    ```
+  </Step>
+
+  <Step title="Group related styles">
+    Keep related styled components together:
+    
+    ```jsx
+    // All form-related styles
+    const FormContainer = styled.form`...`;
+    const FormInput = styled.input`...`;
+    const FormButton = styled.button`...`;
+    ```
+  </Step>
+
+  <Step title="Avoid !important">
+    Use specificity instead of `!important` unless absolutely necessary:
+    
+    ```jsx
+    // Only use !important for overriding third-party styles
+    border-radius: 20px !important;  // From Message.js:105
+    ```
+  </Step>
+</Steps>
+
+## Styling Checklist
+
+<Check>Use styled-components for component-specific styles</Check>
+<Check>Use CSS files for complex layouts and global styles</Check>
+<Check>Follow USC brand color guidelines</Check>
+<Check>Implement hover states for interactive elements</Check>
+<Check>Use flexbox for layouts instead of floats</Check>
+<Check>Include responsive max-width for mobile devices</Check>
+<Check>Use object-fit: cover for consistent image sizing</Check>
+<Check>Add box-sizing: border-box for predictable layouts</Check>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Backend Integration" icon="plug" href="/development/backend-integration">
+    Learn how to connect styled components to API data
+  </Card>
+  <Card title="Components" icon="cube" href="/components/navbar">
+    Explore component implementations and styling examples
+  </Card>
+</CardGroup>

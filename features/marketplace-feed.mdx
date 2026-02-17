@@ -1,0 +1,276 @@
+---
+title: 'Marketplace Feed'
+description: 'Browse and discover items for sale in the marketplace'
+---
+
+## Overview
+
+The marketplace feed is the central hub where users browse available items for sale. It displays a grid of item cards with images, descriptions, and action buttons for messaging sellers or making purchases.
+
+<Note>
+The feed dynamically loads items from the backend using axios and React hooks.
+</Note>
+
+## Feed Architecture
+
+### Component Structure
+
+<CardGroup cols={2}>
+  <Card title="Data Fetching" icon="download">
+    Items loaded from ItemFetchServlet on component mount
+  </Card>
+  <Card title="Grid Layout" icon="table-cells">
+    Responsive grid displays multiple items simultaneously
+  </Card>
+  <Card title="Item Cards" icon="rectangle-list">
+    Each card shows image, name, description, and actions
+  </Card>
+  <Card title="Navigation" icon="arrow-pointer">
+    Click handlers route to purchase or messaging views
+  </Card>
+</CardGroup>
+
+## Data Loading
+
+The feed uses React's useEffect hook to fetch items when the component mounts:
+
+```javascript Feed.js:11-24
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/Final_Project/ItemFetchServlet"
+      );
+      setItems(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  fetchData();
+}, []);
+```
+
+<Tip>
+The empty dependency array `[]` ensures data is fetched only once when the component mounts.
+</Tip>
+
+### State Management
+
+```javascript Feed.js:7-8
+const [items, setItems] = useState([]);
+const navigate = useNavigate();
+```
+
+## Item Display
+
+Each item is rendered as a card with consistent styling and interactive elements.
+
+### Item Card Structure
+
+The feed maps over the items array to create individual cards:
+
+```javascript Feed.js:37-56
+{items.map((item, index) => (
+  <div className="rectangle">
+    <div className="rectangle-content">
+      <div className="rectangle-img">
+        <img src={item.image_url} alt="Product" />
+      </div>
+      <div className="rectangle-description">
+        <h3>{item.item_name}</h3>
+        <p>{item.item_description}</p>
+      </div>
+    </div>
+    <div className="button-container">
+      <StyledButton onClick={() => handleMessage(index)}>Message</StyledButton>
+
+      <div className="buy-now-btn">
+        <button onClick={() => handlePurchase(index)}>Buy Now</button>
+      </div>
+    </div>
+  </div>
+))}
+```
+
+### Item Properties
+
+<AccordionGroup>
+  <Accordion title="image_url">
+    URL to the item's product image displayed in the card
+  </Accordion>
+  <Accordion title="item_name">
+    Title/name of the item displayed as an h3 heading
+  </Accordion>
+  <Accordion title="item_description">
+    Detailed description text shown below the item name
+  </Accordion>
+</AccordionGroup>
+
+## User Interactions
+
+The feed provides two primary actions for each item:
+
+### Purchase Flow
+
+Clicking "Buy Now" navigates to the purchase page with item details:
+
+```javascript Feed.js:26-29
+function handlePurchase(index) {
+  modifyItem(items[index]);
+  navigate("/purchase-item");
+}
+```
+
+<Card title="Purchase Process" icon="cart-shopping">
+  1. User clicks "Buy Now" button
+  2. Selected item data is passed via modifyItem prop
+  3. Navigate to purchase-item route
+  4. Purchase component receives item details
+</Card>
+
+### Messaging Flow
+
+Clicking "Message" opens a conversation with the seller:
+
+```javascript Feed.js:30-33
+function handleMessage(index) {
+  modifyItem(items[index]);
+  navigate("/message");
+}
+```
+
+<Card title="Messaging Process" icon="message">
+  1. User clicks "Message" button
+  2. Selected item data is passed via modifyItem prop
+  3. Navigate to message route
+  4. Message component receives item context
+</Card>
+
+## Styling
+
+The feed uses a combination of CSS classes and styled-components:
+
+### CSS Layout
+
+```javascript Feed.js:34-59
+<div className="rectangles-wrapper">
+  <div className="rectangles-container">
+    {/* Item cards rendered here */}
+  </div>
+</div>
+```
+
+<Note>
+Feed.css (Feed.js:3) contains the grid layout and responsive design rules.
+</Note>
+
+### Button Styling
+
+The message button uses styled-components for custom theming:
+
+```javascript Feed.js:61-66
+const StyledButton = styled.button`
+  background-color: #304ffe;
+  :hover{
+    background-color:#536dfe;
+  }
+`
+```
+
+## Component Props
+
+The Feed component receives the following props:
+
+<ParamField path="modifyItem" type="function" required>
+  Callback function to update selected item state in parent component. Called before navigation to purchase or message views.
+</ParamField>
+
+## Integration Points
+
+<CardGroup cols={2}>
+  <Card title="Backend API" icon="server" href="/api/items">
+    ItemFetchServlet returns array of item objects
+  </Card>
+  <Card title="Purchase Component" icon="credit-card" href="/components/purchase-item">
+    Receives item data for transaction processing
+  </Card>
+  <Card title="Message Component" icon="comment" href="/components/message">
+    Receives item data for seller communication
+  </Card>
+  <Card title="Navbar" icon="bars" href="/components/navbar">
+    Feed accessed via navigation bar
+  </Card>
+</CardGroup>
+
+## Loading States
+
+<Warning>
+The current implementation doesn't show a loading indicator while fetching data. Consider adding a loading state for better UX.
+</Warning>
+
+**Recommended enhancement:**
+
+```javascript
+const [items, setItems] = useState([]);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "http://localhost:8080/Final_Project/ItemFetchServlet"
+      );
+      setItems(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
+```
+
+## Error Handling
+
+Currently, errors are logged to the console:
+
+```javascript Feed.js:19
+console.error("Error fetching data:", error);
+```
+
+<Tip>
+Consider implementing error UI to inform users when items fail to load.
+</Tip>
+
+## Related Features
+
+- [Item Listings](/features/item-listings) - Learn how sellers create items that appear in the feed
+- [Transactions](/features/transactions) - Understand the purchase flow initiated from the feed
+- [Messaging](/features/messaging) - Explore seller communication started from feed items
+- [User Profiles](/features/user-profiles) - View seller profiles and their listings
+
+## Usage Example
+
+```jsx
+import Feed from './Feed';
+
+function App() {
+  const [selectedItem, setSelectedItem] = useState(null);
+  
+  return (
+    <Feed modifyItem={setSelectedItem} />
+  );
+}
+```
+
+## Next Steps
+
+Users typically:
+1. Browse items in the feed
+2. Click "Message" to [contact sellers](/features/messaging)
+3. Click "Buy Now" to [complete purchases](/features/transactions)
+4. Check [their profile](/features/user-profiles) for purchase history

@@ -1,0 +1,276 @@
+---
+title: "Profile Component"
+description: "User profile page displaying purchase history, sales history, and user information for the Trojan Marketplace."
+---
+
+## Overview
+
+The Profile component displays a comprehensive view of a user's marketplace activity, including their profile information, rating, purchase history, and sales history. It provides a centralized location for users to track their marketplace transactions.
+
+## Location
+
+`src/Profile.js`
+
+## Props
+
+This component does not accept any props. User data is currently hardcoded for demonstration purposes.
+
+## Features
+
+### User Information Section
+
+Displays the user's profile photo, name, class year, and sales statistics:
+
+```javascript
+<InfoContainer>
+  <div style={{ display: "flex", gap: "20px" }}>
+    <CircularImage src={"/profile-photo.webp"} alt="Profile" />
+    <InfoDiv>
+      <NameText>Tommy Trojan</NameText>
+      <SubText>Class of 2023</SubText>
+      <SubText>4 items sold</SubText>
+    </InfoDiv>
+  </div>
+  <RatingDiv>
+    <RedText>Edit Profile</RedText>
+    <SubText>5.0 *</SubText>
+  </RatingDiv>
+</InfoContainer>
+```
+
+**Displayed Information:**
+- Circular profile photo (80x80px)
+- User name (Tommy Trojan)
+- Class year
+- Total items sold count
+- User rating (5-star scale)
+- Edit Profile link
+
+### Purchases Section
+
+Displays a list of items the user has purchased with:
+
+- Item thumbnail image (100x100px)
+- Item title
+- Purchase date
+- Purchase price
+
+```javascript
+<PurchaseDiv>
+  <PurchaseHeaderContainer>Purchases</PurchaseHeaderContainer>
+  {items.map((item) => (
+    <SaleItemDiv>
+      <ItemImage src={"/heater.jpeg"} alt="Profile" />
+      <ItemDescription>
+        <ItemTitle>Space Heater</ItemTitle>
+        <SubText>Purchased Mar. 12, 2023</SubText>
+      </ItemDescription>
+      <MoneyText>$50</MoneyText>
+    </SaleItemDiv>
+  ))}
+</PurchaseDiv>
+```
+
+### Sales Section
+
+Displays a list of items the user has sold with the same structure as purchases:
+
+```javascript
+<SalesDiv>
+  <SalesHeaderContainer>Sales</SalesHeaderContainer>
+  {items.map((item) => (
+    <SaleItemDiv>
+      <ItemImage src={"/heater.jpeg"} alt="Profile" />
+      <ItemDescription>
+        <ItemTitle>Space Heater</ItemTitle>
+        <SubText>Sold Mar. 12, 2023</SubText>
+      </ItemDescription>
+      <MoneyText>$50</MoneyText>
+    </SaleItemDiv>
+  ))}
+</SalesDiv>
+```
+
+## Layout Structure
+
+The component uses a centered, card-based layout with distinct sections:
+
+```javascript
+const OuterContainer = styled.div`
+  width: 700px;
+  background-color: #efefee;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+```
+
+- **Container width**: 700px
+- **Background**: Light gray (#efefee)
+- **Centered**: Auto margins
+- **Spacing**: 10px gap between sections
+
+## Section Headers
+
+Each transaction section has a colored header:
+
+**Purchases Header:**
+```javascript
+const PurchaseHeaderContainer = styled.div`
+  width: 100%;
+  height: 30px;
+  background-color: #efd365; // Gold
+  display: flex;
+  flex-direction: column;
+  font-size: 1.3em;
+  font-weight: bold;
+  padding-left: 3px;
+`;
+```
+
+**Sales Header:**
+```javascript
+const SalesHeaderContainer = styled(PurchaseHeaderContainer)`
+  background-color: #bd7678; // Rose
+`;
+```
+
+## Item Card Layout
+
+Each transaction item is displayed in a consistent card format:
+
+```javascript
+const SaleItemDiv = styled.div`
+  height: 140px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding-left: 20px;
+  background-color: white;
+  border-bottom: 1px solid grey;
+`;
+```
+
+## Styled Components
+
+### Profile Image
+
+```javascript
+const CircularImage = styled.img`
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+`;
+```
+
+### Item Image
+
+```javascript
+const ItemImage = styled.img`
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+`;
+```
+
+### Text Styles
+
+```javascript
+const NameText = styled.p`
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+`;
+
+const ItemTitle = styled.p`
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+  color: #777777;
+`;
+
+const SubText = styled.p`
+  color: #939292;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin: 0;
+`;
+
+const MoneyText = styled.p`
+  color: #939292;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin: 0;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+`;
+
+const RedText = styled.p`
+  color: red;
+  font-size: 1em;
+  :hover{
+    color: darkred;
+  }
+  position: relative;
+  bottom: 10px;
+`;
+```
+
+## Implementation Example
+
+```javascript
+import Profile from './Profile';
+import { Route } from 'react-router-dom';
+
+function App() {
+  return (
+    <Route path="/profile" element={<Profile />} />
+  );
+}
+```
+
+## Current Limitations
+
+<Warning>
+The Profile component currently displays mock data:
+- Hardcoded user information (Tommy Trojan)
+- Repeated sample items using `Array.from({ length: 5 })`
+- No integration with backend user data
+
+For production use, this component should be refactored to:
+- Accept user data as props or fetch from an API
+- Display actual purchase and sales history
+- Implement edit profile functionality
+</Warning>
+
+## Mock Data Generation
+
+```javascript
+const repeatCount = 5;
+const items = Array.from({ length: repeatCount }, (_, index) => index);
+```
+
+This creates an array of 5 items for demonstration purposes.
+
+## Dependencies
+
+- `react` - Core React library
+- `styled-components` - CSS-in-JS styling for all component styles
+
+## Related Components
+
+- [Navbar](/components/navbar) - Navigation to profile page
+- [Feed](/components/feed) - Browse items for purchase
+- [Purchase Item](/components/purchase-item) - Complete purchases
+
+## Related Documentation
+
+- [User Profiles](/features/user-profiles) - Profile feature overview
+- [Transactions](/features/transactions) - Transaction history
+- [Users API](/api/users) - User data endpoints

@@ -1,0 +1,137 @@
+---
+title: 'Items API'
+description: 'Endpoints for managing marketplace item listings'
+---
+
+## Overview
+
+The Items API provides endpoints for fetching marketplace items and creating new item listings.
+
+## Fetch Items
+
+<RequestExample>
+```javascript Feed.js
+const response = await axios.get(
+  "http://localhost:8080/Final_Project/ItemFetchServlet"
+);
+setItems(response.data);
+```
+</RequestExample>
+
+### Endpoint
+
+`GET /Final_Project/ItemFetchServlet`
+
+Retrieves all available items from the marketplace feed.
+
+### Request Parameters
+
+No parameters required.
+
+### Response
+
+<ResponseField name="items" type="array">
+  Array of item objects representing marketplace listings
+  
+  <ResponseField name="item_name" type="string">
+    Name of the item
+  </ResponseField>
+  
+  <ResponseField name="item_description" type="string">
+    Description of the item
+  </ResponseField>
+  
+  <ResponseField name="image_url" type="string">
+    URL of the item's image
+  </ResponseField>
+  
+  <ResponseField name="price" type="string">
+    Price of the item
+  </ResponseField>
+</ResponseField>
+
+### Example Response
+
+```json
+[
+  {
+    "item_name": "Textbook - Introduction to Computer Science",
+    "item_description": "Used textbook in good condition",
+    "image_url": "https://example.com/textbook.jpg",
+    "price": "45.00"
+  },
+  {
+    "item_name": "Mini Fridge",
+    "item_description": "Perfect for dorm room, barely used",
+    "image_url": "https://example.com/fridge.jpg",
+    "price": "80.00"
+  }
+]
+```
+
+### Implementation Details
+
+The fetch items implementation can be found in `/workspace/source/src/Feed.js:14-16`. The fetched items are displayed in the marketplace feed.
+
+## Add Item
+
+<RequestExample>
+```javascript CreateSale.js
+const response = await axios.post(
+  "http://localhost:8080/Final_Project/AddItemServlet",
+  `item_name=${encodeURIComponent(title)}&item_description=${encodeURIComponent(
+    description
+  )}&image_url=${encodeURIComponent(image)}&price=${encodeURIComponent(price)}`,
+  {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  }
+);
+```
+</RequestExample>
+
+### Endpoint
+
+`POST /Final_Project/AddItemServlet`
+
+Creates a new item listing in the marketplace.
+
+### Request Parameters
+
+<ParamField body="item_name" type="string" required>
+  Name/title of the item being listed
+</ParamField>
+
+<ParamField body="item_description" type="string" required>
+  Detailed description of the item
+</ParamField>
+
+<ParamField body="image_url" type="string" required>
+  URL of the item's image
+</ParamField>
+
+<ParamField body="price" type="string" required>
+  Price of the item
+</ParamField>
+
+### Headers
+
+<ParamField header="Content-Type" type="string" required>
+  Must be `application/x-www-form-urlencoded`
+</ParamField>
+
+### Response
+
+Returns a success response when the item is successfully added to the marketplace.
+
+### Implementation Details
+
+The add item implementation can be found in `/workspace/source/src/CreateSale.js:24-38`. After successfully adding an item, the user is redirected to the feed page.
+
+## Related Pages
+
+- [Item Listings Feature](/features/item-listings)
+- [Marketplace Feed Feature](/features/marketplace-feed)
+- [Create Sale Component](/components/create-sale)
+- [Feed Component](/components/feed)

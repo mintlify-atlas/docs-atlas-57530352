@@ -1,0 +1,335 @@
+---
+title: "Message Component"
+description: "Real-time messaging interface for buyers and sellers to communicate about marketplace items."
+---
+
+## Overview
+
+The Message component (MessagingPage) provides a chat-style interface for buyers to communicate with sellers about specific items. It displays item details, message history, and an input form for sending new messages.
+
+## Location
+
+`src/Message.js`
+
+## Props
+
+<ParamField path="item" type="object" required>
+  The selected item object passed from the Feed component, containing:
+  - `item_name` - Name of the item being discussed
+  - `item_description` - Description text
+  - Other item properties (image_url, price, etc.)
+</ParamField>
+
+## State Management
+
+### Local State
+
+<ParamField path="messages" type="array">
+  Array of message strings sent by the current user during the session. Initialized as empty array.
+</ParamField>
+
+<ParamField path="newMessage" type="string">
+  Current value of the message input field. Cleared after each message is sent.
+</ParamField>
+
+## Features
+
+### Item Context Display
+
+Shows the item being discussed at the top of the conversation:
+
+```javascript
+<InfoContainer>
+  <div style={{ display: "flex", gap: "20px" }}>
+    <SquareImage src={"/v3_87.png"} alt="couch" />
+    <InfoDiv>
+      <NameText>{item.item_name}</NameText>
+      <SubText>{item.item_description}</SubText>
+      <SubText>Seller: Tommy T</SubText>
+    </InfoDiv>
+  </div>
+</InfoContainer>
+```
+
+**Displayed Information:**
+- Item image (80x80px square)
+- Item name
+- Item description
+- Seller name (currently hardcoded as "Tommy T")
+
+### Message Display
+
+Shows conversation with distinct styling for sent and received messages:
+
+```javascript
+<MessagesContainer>
+  <div class="timestamp">09:10 AM</div>
+  <div className="message-received">
+    <span>Hi, Tommy!</span>
+  </div>
+  <div className="message-received">
+    <span>How are you?</span>
+  </div>
+  {messages.map((message, index) => (
+    <div className="message-sent" key={index}>
+      <span>{message}</span>
+    </div>
+  ))}
+</MessagesContainer>
+```
+
+**Message Styles:**
+
+**Received Messages** (from seller):
+```javascript
+.message-received {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.message-received span {
+  background: #e6e6e6;
+  width: fit-content;
+  padding: 10px;
+  margin: 2px;
+  border-radius: 20px;
+}
+```
+
+**Sent Messages** (from buyer):
+```javascript
+.message-sent {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message-sent span {
+  width: fit-content;
+  padding: 10px;
+  margin: 2px;
+  border-radius: 20px;
+  background: #fcc901; // USC gold
+  margin-right: 0;
+}
+```
+
+<Note>
+The component includes hardcoded sample messages ("Hi, Tommy!" and "How are you?") to demonstrate the received message styling.
+</Note>
+
+### Message Input Form
+
+Provides an input field and send button:
+
+```javascript
+<MessageForm onSubmit={handleMessageSubmit}>
+  <MessageInput
+    type="text"
+    placeholder="Type your message here"
+    value={newMessage}
+    onChange={(event) => setNewMessage(event.target.value)}
+  />
+  <SendMessageButton type="submit">Send</SendMessageButton>
+</MessageForm>
+```
+
+### Message Submission
+
+Handles sending new messages:
+
+```javascript
+const handleMessageSubmit = (event) => {
+  event.preventDefault();
+  if (newMessage.trim() !== "") {
+    setMessages([...messages, newMessage]);
+    setNewMessage("");
+  }
+};
+```
+
+**Submission Flow:**
+1. Prevents default form submission
+2. Checks if message is not empty (after trimming whitespace)
+3. Adds message to messages array
+4. Clears input field
+
+<Warning>
+Messages are only stored in local component state. They do not persist and are not sent to a backend server. Refreshing the page or navigating away will lose all messages.
+</Warning>
+
+## Layout Structure
+
+Uses a centered container with three main sections:
+
+```javascript
+const OuterContainer = styled.div`
+  width: 700px;
+  background-color: #efefee;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+```
+
+1. **InfoContainer** - Item and seller information
+2. **MessagesContainer** - Scrollable message history
+3. **MessageForm** - Input and send button
+
+## Styled Components
+
+### Messages Container
+
+```javascript
+const MessagesContainer = styled.div`
+  flex: 1;
+  padding: 20px;
+  overflow-y: scroll;
+  background: #fff;
+
+  .timestamp {
+    color: #aaaaaa;
+    width: 100%;
+    text-align: center;
+  }
+`;
+```
+
+- **Scrollable**: Handles long conversations
+- **White background**: Distinguishes from outer container
+- **Flexible height**: Grows to fill available space
+
+### Message Input
+
+```javascript
+const MessageInput = styled.input`
+  flex: 1;
+  margin-right: 10px;
+  width: 100%;
+  background: #e6e6e6;
+  border-radius: 20px !important;
+`;
+```
+
+### Send Button
+
+```javascript
+const SendMessageButton = styled.button`
+  background-color: #304ffe;
+  :hover {
+    background-color: #536dfe;
+  }
+  margin-top: 5px;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
+```
+
+- **Color**: Blue (#304ffe) with lighter hover state
+- **Style**: Rounded corners, white text
+
+### Form Layout
+
+```javascript
+const MessageForm = styled.form`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  flex-direction: row;
+  background: #fff;
+  margin-top: -20px;
+`;
+```
+
+## Implementation Example
+
+```javascript
+import { useState } from 'react';
+import Feed from './Feed';
+import MessagingPage from './Message';
+import { Routes, Route } from 'react-router-dom';
+
+function App() {
+  const [selectedItem, setSelectedItem] = useState(null);
+  
+  return (
+    <Routes>
+      <Route path="/feed" element={
+        <Feed modifyItem={setSelectedItem} />
+      } />
+      <Route path="/message" element={
+        <MessagingPage item={selectedItem} />
+      } />
+    </Routes>
+  );
+}
+```
+
+## Data Flow
+
+1. User browses items in the Feed component
+2. User clicks "Message" button on an item
+3. Feed calls `modifyItem(items[index])`
+4. Feed navigates to `/message`
+5. MessagingPage receives item via props
+6. User can view item details and send messages
+
+## Current Limitations
+
+<Warning>
+The messaging system has several limitations that prevent it from functioning as a real chat:
+
+1. **No Backend Integration**: Messages aren't sent to or received from a server
+2. **No Real-time Updates**: Can't receive messages from the seller
+3. **No Persistence**: Messages are lost on page refresh or navigation
+4. **Single Session Only**: Each user only sees their own sent messages
+5. **Hardcoded Conversations**: Sample messages are hardcoded in the component
+6. **No Message Metadata**: No timestamps, read receipts, or delivery status
+7. **No Seller Identity**: Seller name is hardcoded as "Tommy T"
+</Warning>
+
+## Potential Improvements
+
+<Tip>
+To implement a production-ready messaging system:
+
+- Integrate with a real-time messaging backend (WebSocket, Firebase, etc.)
+- Store messages in a database with proper associations
+- Implement message history fetching on mount
+- Add real-time message reception from sellers
+- Include timestamps for each message
+- Add typing indicators
+- Implement read receipts
+- Support image and file attachments
+- Add notification system for new messages
+- Create a separate inbox/conversations list view
+</Tip>
+
+## Accessibility
+
+- Form submit on Enter key press (standard form behavior)
+- Input placeholder provides usage hint
+- All images have alt text
+
+## Dependencies
+
+- `react` - Core React library with hooks (useState)
+- `styled-components` - CSS-in-JS styling for all component styles
+
+## Related Components
+
+- [Feed](/components/feed) - Item browsing and message initiation
+- [Purchase Item](/components/purchase-item) - Alternative action from feed
+- [Profile](/components/profile) - User information
+
+## Related Documentation
+
+- [Messaging](/features/messaging) - Messaging feature overview
+- [Item Listings](/features/item-listings) - Item data structure
+- [User Profiles](/features/user-profiles) - User identity and profiles

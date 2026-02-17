@@ -1,0 +1,263 @@
+---
+title: 'Routing'
+description: 'Route configuration and navigation structure'
+---
+
+The Trojan Marketplace uses React Router for client-side routing. All routes are defined in the Main component.
+
+## Route Structure
+
+The application uses React Router v6 with the following structure from Main.js:
+
+```javascript
+import { Routes, Route } from "react-router-dom";
+
+<Routes>
+  <Route exact path="/" element={<Home />}></Route>
+  <Route exact path="/login" element={<Login logIn={logIn} />}></Route>
+  <Route exact path="/profile" element={<Profile />}></Route>
+  <Route exact path="/feed" element={<Feed modifyItem={modifyItem} />}></Route>
+  <Route exact path="/message" element={<Message item={purchaseItem} />}></Route>
+  <Route exact path="/create-sale" element={<CreateSale />}></Route>
+  <Route exact path="/purchase-item" element={<PurchaseItem item={purchaseItem} />}></Route>
+  <Route exact path="/create-account" element={<CreateAccount />}></Route>
+</Routes>
+```
+
+## Available Routes
+
+### Home Route
+
+**Path:** `/`
+
+**Component:** Home
+
+**Description:** Landing page displaying welcome information and instructions for new users.
+
+**Authentication:** Public
+
+**Code Reference:** Main.js:29
+
+---
+
+### Login Route
+
+**Path:** `/login`
+
+**Component:** Login
+
+**Props:** `logIn` callback function
+
+**Description:** User authentication page with email and password fields.
+
+**Authentication:** Public
+
+**Navigation:** Redirects to `/feed` on successful login
+
+**Code Reference:** Main.js:30
+
+---
+
+### Profile Route
+
+**Path:** `/profile`
+
+**Component:** Profile
+
+**Description:** User profile page displaying purchases, sales, and user information.
+
+**Authentication:** Protected (requires login)
+
+**Code Reference:** Main.js:31
+
+---
+
+### Feed Route
+
+**Path:** `/feed`
+
+**Component:** Feed
+
+**Props:** `modifyItem` callback function
+
+**Description:** Marketplace feed displaying all available items for sale.
+
+**Authentication:** Protected (requires login)
+
+**Navigation:** 
+- Clicking "Buy Now" navigates to `/purchase-item`
+- Clicking "Message" navigates to `/message`
+
+**Code Reference:** Main.js:32-36
+
+---
+
+### Message Route
+
+**Path:** `/message`
+
+**Component:** Message
+
+**Props:** `item` object
+
+**Description:** Messaging interface for communicating with sellers about specific items.
+
+**Authentication:** Protected (requires login)
+
+**State:** Receives selected item from Feed component via `purchaseItem` state
+
+**Code Reference:** Main.js:37-41
+
+---
+
+### Create Sale Route
+
+**Path:** `/create-sale`
+
+**Component:** CreateSale
+
+**Description:** Form for creating new item listings with title, description, price, and image.
+
+**Authentication:** Protected (requires login)
+
+**Navigation:** Redirects to `/feed` after successful item creation
+
+**Code Reference:** Main.js:42
+
+---
+
+### Purchase Item Route
+
+**Path:** `/purchase-item`
+
+**Component:** PurchaseItem
+
+**Props:** `item` object
+
+**Description:** Item purchase page with payment options (CashApp, PayPal) and pickup details.
+
+**Authentication:** Protected (requires login)
+
+**State:** Receives selected item from Feed component via `purchaseItem` state
+
+**Code Reference:** Main.js:43-47
+
+---
+
+### Create Account Route
+
+**Path:** `/create-account`
+
+**Component:** CreateAccount
+
+**Description:** Account registration page for new users.
+
+**Authentication:** Public
+
+**Navigation:** Redirects to `/login` after successful account creation
+
+**Code Reference:** Main.js:48
+
+---
+
+## Programmatic Navigation
+
+Components use React Router's `useNavigate` hook for programmatic navigation:
+
+### Feed Component Navigation
+
+```javascript
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
+
+function handlePurchase(index) {
+  modifyItem(items[index]);
+  navigate("/purchase-item");
+}
+
+function handleMessage(index) {
+  modifyItem(items[index]);
+  navigate("/message");
+}
+```
+
+**Location:** Feed.js:26-33
+
+### Login Component Navigation
+
+```javascript
+if (response.data === true) {
+  props.logIn();
+  navigate("/feed");
+}
+```
+
+**Location:** Login.js:89-91
+
+### CreateSale Component Navigation
+
+```javascript
+navigate("/feed");
+```
+
+**Location:** CreateSale.js:39
+
+### CreateAccount Component Navigation
+
+```javascript
+if (response.data === true) {
+  navigate("/login");
+}
+```
+
+**Location:** CreateAccount.js:98-100
+
+---
+
+## Declarative Navigation
+
+The Navbar component uses React Router's `Link` component for declarative navigation:
+
+```javascript
+import { Link } from "react-router-dom";
+
+{loggedIn ? (
+  <>
+    <Link className="nav-link" to="/profile">Profile</Link>
+    <Link className="nav-link" to="/create-sale">Create Sale</Link>
+    <Link className="nav-link" to="/feed">Feed</Link>
+    <Link className="nav-link" to="/login">Logged In</Link>
+  </>
+) : (
+  <>
+    <Link className="nav-link" to="/login">Login</Link>
+  </>
+)}
+```
+
+**Location:** Navbar.js:103-124
+
+---
+
+## Route State Management
+
+The Main component manages route-specific state:
+
+```javascript
+const [purchaseItem, setPurchaseItem] = useState({});
+const [loggedIn, setLoggedIn] = useState(false);
+
+function modifyItem(item) {
+  setPurchaseItem(item);
+}
+```
+
+**Location:** Main.js:15-19
+
+The `purchaseItem` state is shared between:
+- Feed component (sets the item)
+- Message component (displays messaging for the item)
+- PurchaseItem component (displays purchase details)
+
+This pattern allows data to flow between routes without using URL parameters or external state management libraries.

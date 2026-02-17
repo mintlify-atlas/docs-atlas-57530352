@@ -1,0 +1,198 @@
+---
+title: "Feed Component"
+description: "Marketplace feed component displaying available items with purchase and messaging functionality."
+---
+
+## Overview
+
+The Feed component is the main marketplace view that displays all available items for purchase. It fetches items from the backend, renders them in a grid layout, and provides interactive buttons for messaging sellers or purchasing items.
+
+## Location
+
+`src/Feed.js`
+
+## Props
+
+<ParamField path="modifyItem" type="function" required>
+  Callback function that receives the selected item object and stores it for use in the PurchaseItem or Message components. Called when a user clicks "Buy Now" or "Message" buttons.
+</ParamField>
+
+## State Management
+
+### Local State
+
+<ParamField path="items" type="array">
+  Array of item objects fetched from the backend. Each item contains:
+  - `item_name` - Name of the item
+  - `item_description` - Description text
+  - `image_url` - URL to the item image
+  - `price` - Item price
+</ParamField>
+
+## Features
+
+### Data Fetching
+
+The component fetches items on mount using axios and the ItemFetchServlet endpoint:
+
+```javascript
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/Final_Project/ItemFetchServlet"
+      );
+      setItems(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  fetchData();
+}, []);
+```
+
+### Item Display
+
+Each item is rendered in a card layout with:
+
+- Item image
+- Item name
+- Item description
+- Action buttons (Message, Buy Now)
+
+```javascript
+{items.map((item, index) => (
+  <div className="rectangle">
+    <div className="rectangle-content">
+      <div className="rectangle-img">
+        <img src={item.image_url} alt="Product" />
+      </div>
+      <div className="rectangle-description">
+        <h3>{item.item_name}</h3>
+        <p>{item.item_description}</p>
+      </div>
+    </div>
+    <div className="button-container">
+      <StyledButton onClick={() => handleMessage(index)}>Message</StyledButton>
+      <div className="buy-now-btn">
+        <button onClick={() => handlePurchase(index)}>Buy Now</button>
+      </div>
+    </div>
+  </div>
+))}
+```
+
+### Purchase Flow
+
+When a user clicks "Buy Now", the component:
+
+1. Calls `modifyItem()` with the selected item
+2. Navigates to the purchase page
+
+```javascript
+function handlePurchase(index) {
+  modifyItem(items[index]);
+  navigate("/purchase-item");
+}
+```
+
+### Messaging Flow
+
+When a user clicks "Message", the component:
+
+1. Calls `modifyItem()` with the selected item
+2. Navigates to the messaging page
+
+```javascript
+function handleMessage(index) {
+  modifyItem(items[index]);
+  navigate("/message");
+}
+```
+
+## Styling
+
+The component uses a combination of external CSS (`Feed.css`) and styled-components:
+
+```javascript
+const StyledButton = styled.button`
+  background-color: #304ffe;
+  :hover{
+    background-color:#536dfe;
+  }
+`
+```
+
+- **Message Button**: Blue (#304ffe) with lighter hover state (#536dfe)
+- **Layout**: Grid-based responsive layout for item cards
+
+## Implementation Example
+
+```javascript
+import { useState } from 'react';
+import { Route } from 'react-router-dom';
+import Feed from './Feed';
+import PurchaseItem from './PurchaseItem';
+import Message from './Message';
+
+function App() {
+  const [selectedItem, setSelectedItem] = useState(null);
+  
+  return (
+    <>
+      <Route path="/feed" element={
+        <Feed modifyItem={setSelectedItem} />
+      } />
+      <Route path="/purchase-item" element={
+        <PurchaseItem item={selectedItem} />
+      } />
+      <Route path="/message" element={
+        <Message item={selectedItem} />
+      } />
+    </>
+  );
+}
+```
+
+## API Integration
+
+The component communicates with the backend through:
+
+- **Endpoint**: `http://localhost:8080/Final_Project/ItemFetchServlet`
+- **Method**: GET
+- **Response**: Array of item objects
+
+## Error Handling
+
+Errors during data fetching are logged to the console:
+
+```javascript
+catch (error) {
+  console.error("Error fetching data:", error);
+}
+```
+
+<Warning>
+The current implementation logs errors but does not display user-facing error messages. Consider adding error state and UI feedback for production use.
+</Warning>
+
+## Dependencies
+
+- `react` - Core React library with hooks (useState, useEffect)
+- `axios` - HTTP client for API requests
+- `react-router-dom` - Navigation with useNavigate hook
+- `styled-components` - CSS-in-JS styling
+- `./Feed.css` - Component-specific styles
+
+## Related Components
+
+- [Purchase Item](/components/purchase-item) - Item purchase interface
+- [Message](/components/message) - Seller messaging interface
+- [Create Sale](/components/create-sale) - Add new items to feed
+
+## Related Documentation
+
+- [Item Listings](/features/item-listings) - Item data structure and management
+- [Marketplace Feed](/features/marketplace-feed) - Feed functionality overview
+- [Items API](/api/items) - Backend item endpoints

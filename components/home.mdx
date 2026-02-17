@@ -1,0 +1,130 @@
+---
+title: "Home Component"
+description: "Landing page component displaying welcome information and meetup locations for the Trojan Marketplace."
+---
+
+## Overview
+
+The Home component serves as the landing page for the Trojan Marketplace application. It displays a welcome message, instructions for getting started, and information about meetup locations for completed transactions.
+
+## Location
+
+`src/Home.js`
+
+## Props
+
+This component does not accept any props.
+
+## Features
+
+### Welcome Message
+
+Displays a centered welcome message introducing users to the Trojan Marketplace:
+
+```javascript
+<h2 style={{textAlign: 'center'}}>Welcome to the Trojan Marketplace</h2>
+```
+
+### Getting Started Instructions
+
+Provides clear instructions for new users:
+
+```javascript
+<p style={{textAlign: 'center'}}>
+  To get started, please click the login button to access the feed
+</p>
+```
+
+### Meetup Location Information
+
+Informs users about designated meetup locations for item exchanges:
+
+```javascript
+<p style={{textAlign: 'center'}}>
+  Once items are sold, meet ups will be at RTCC, Entrance 4, and Leavey Library
+</p>
+```
+
+### Campus Map Display
+
+Features a prominent USC campus map image to help users identify locations:
+
+```javascript
+<div className="image">
+  <img
+    src="https://www.simpleimageresizer.com/_uploads/photos/f140f7ce/USC_map_pic_1_750x750.png"
+    alt="large image"
+  />
+</div>
+```
+
+## Implementation Example
+
+```javascript
+import Home from './Home';
+import { Route } from 'react-router-dom';
+
+function App() {
+  return (
+    <Route path="/" element={<Home />} />
+  );
+}
+```
+
+## Layout Structure
+
+The component uses a container-based layout with two main sections:
+
+1. **Image Section**: Displays the USC campus map
+2. **Rectangles Section**: Contains the welcome text and instructions
+
+```javascript
+<div className="container">
+  <div className="image">
+    {/* Campus map */}
+  </div>
+  <div className="rectangles">
+    <div className="rectangle">
+      {/* Welcome content */}
+    </div>
+  </div>
+</div>
+```
+
+## Styling
+
+The component relies on external CSS from `Home.css` for layout and styling. All text content uses inline `textAlign: 'center'` styling for center alignment.
+
+## Designated Meetup Locations
+
+The Home component specifies three official meetup locations for the Trojan Marketplace:
+
+1. **RTCC** - Ronald Tutor Campus Center
+2. **Entrance 4** - Campus entrance location
+3. **Leavey Library** - Thomas and Dorothy Leavey Library
+
+These locations are chosen for safety and convenience within the USC campus.
+
+## User Flow
+
+The Home component is typically the first page users see when visiting the application:
+
+1. User arrives at the landing page
+2. Reads welcome message and instructions
+3. Views campus map for location reference
+4. Clicks login button to access the marketplace feed
+
+## Dependencies
+
+- `react` - Core React library
+- `./Home.css` - Component-specific styles
+
+## Related Components
+
+- [Navbar](/components/navbar) - Navigation with login access
+- [Feed](/components/feed) - Main marketplace view after login
+
+## Related Documentation
+
+- [Authentication](/features/authentication) - Login process
+- [Transactions](/features/transactions) - Completing purchases and meetups

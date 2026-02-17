@@ -1,0 +1,518 @@
+---
+title: 'Transactions'
+description: 'Complete purchases and manage marketplace transactions'
+---
+
+## Overview
+
+The transactions system handles the purchase flow for marketplace items. Users can review item details, see pickup information, and complete purchases through integrated payment options like CashApp and PayPal.
+
+<Note>
+Transactions are initiated from the marketplace feed by clicking the "Buy Now" button on any item listing.
+</Note>
+
+## Purchase Flow
+
+### Transaction Stages
+
+<Steps>
+  <Step title="Browse Feed">
+    User finds an item of interest in the marketplace feed
+  </Step>
+  <Step title="Initiate Purchase">
+    Click "Buy Now" button to start transaction
+  </Step>
+  <Step title="Review Details">
+    View item information, pickup details, and price
+  </Step>
+  <Step title="Select Payment">
+    Choose CashApp or PayPal as payment method
+  </Step>
+  <Step title="Complete Transaction">
+    Process payment through selected provider
+  </Step>
+</Steps>
+
+## Purchase Page Layout
+
+### UI Components
+
+<CardGroup cols={2}>
+  <Card title="Purchase Banner" icon="receipt">
+    Gold header clearly indicates purchase mode
+  </Card>
+  <Card title="Item Details" icon="box">
+    Image, name, description, and seller info
+  </Card>
+  <Card title="Pickup Info" icon="location-dot">
+    Location and time for item collection
+  </Card>
+  <Card title="Payment Options" icon="credit-card">
+    CashApp and PayPal buttons
+  </Card>
+</CardGroup>
+
+## Item Information Display
+
+The purchase page shows comprehensive item details:
+
+```javascript PurchaseItem.js:113-123
+<PurchaseBanner> Purchase </PurchaseBanner>
+<InfoContainer>
+  <div style={{ display: "flex", gap: "20px" }}>
+    <SquareImage src={item.image_url} alt="couch" />
+    <InfoDiv>
+      <NameText>{item.item_description} - ${item.price}</NameText>
+      <SubText>{item.item_description}</SubText>
+      <SubText>Seller: Tommy T</SubText>
+    </InfoDiv>
+  </div>
+</InfoContainer>
+```
+
+<AccordionGroup>
+  <Accordion title="Item Image">
+    Square 80x80px thumbnail from item.image_url
+  </Accordion>
+  <Accordion title="Item Name & Price">
+    Combined display showing description and price
+  </Accordion>
+  <Accordion title="Description">
+    Full item description for purchase confirmation
+  </Accordion>
+  <Accordion title="Seller Info">
+    Shows who you're buying from (currently hardcoded as "Tommy T")
+  </Accordion>
+</AccordionGroup>
+
+## Pickup Information
+
+Logistical details for item collection:
+
+```javascript PurchaseItem.js:124-129
+<PickupInfoContainer>
+  <PickUpText>Pickup Location </PickUpText>
+  <SubText> 0.2 miles from USC</SubText>
+  <PickUpText>Pickup Time </PickUpText>
+  <SubText> Mar.29, 2023- 7 P.M. </SubText>
+</PickupInfoContainer>
+```
+
+<Warning>
+**Static Data:** Pickup location and time are currently hardcoded. These should be dynamically loaded from the item data or seller preferences.
+</Warning>
+
+### Pickup Details Structure
+
+<Tabs>
+  <Tab title="Location">
+    Shows pickup location relative to USC campus (e.g., "0.2 miles from USC")
+  </Tab>
+  <Tab title="Time">
+    Displays date and time for item pickup (e.g., "Mar.29, 2023- 7 P.M.")
+  </Tab>
+</Tabs>
+
+## Payment Options
+
+Users can complete purchases through two payment methods:
+
+### CashApp Payment
+
+```javascript PurchaseItem.js:132
+<CashAppButton type="submit"> $CashApp </CashAppButton>
+```
+
+```javascript PurchaseItem.js:76-85
+const CashAppButton = styled.div`
+  background-color: #f9d440;
+  margin-top: 5px;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+`;
+```
+
+### PayPal Payment
+
+```javascript PurchaseItem.js:133
+<PayPalButton type="submit"> PayPal </PayPalButton>
+```
+
+```javascript PurchaseItem.js:87-96
+const PayPalButton = styled.div`
+  background-color: #f9d440;
+  margin-top: 5px;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+`;
+```
+
+<Note>
+Both payment buttons currently use the same gold color (#f9d440) matching USC's brand colors.
+</Note>
+
+<Warning>
+**Missing Functionality:** The payment buttons don't have click handlers implemented. They need to integrate with actual payment processing APIs.
+</Warning>
+
+## Component Props
+
+The PurchaseItem component receives item data:
+
+<ParamField path="item" type="object" required>
+  Item object containing all product details for the transaction
+  
+  **Properties:**
+  - `item_name`: String - Name of the item
+  - `item_description`: String - Detailed description
+  - `image_url`: String - URL to product image
+  - `price`: String/Number - Item price in dollars
+</ParamField>
+
+### Usage Example
+
+```jsx
+import PurchaseItem from './PurchaseItem';
+
+function App() {
+  const selectedItem = {
+    item_name: "Space Heater",
+    item_description: "Barely used space heater",
+    image_url: "/heater.jpeg",
+    price: "50"
+  };
+  
+  return <PurchaseItem item={selectedItem} />;
+}
+```
+
+## Styled Components
+
+The purchase page uses styled-components for consistent styling:
+
+<CodeGroup>
+
+```javascript Purchase Banner (PurchaseItem.js:58-67)
+const PurchaseBanner = styled.div`
+  font-size: 1.4em;
+  font-weight: 600;
+  background-color: #efd465;
+  display: flow-root;
+  margin-top: 5px;
+  color: black;
+  padding: 8px 16px;
+  text-align: center;
+`;
+```
+
+```javascript Outer Container (PurchaseItem.js:17-25)
+const OuterContainer = styled.div`
+  width: 700px;
+  background-color: #efefee;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+```
+
+```javascript Info Container (PurchaseItem.js:68-74)
+const InfoContainer = styled.div`
+  padding: 10px;
+  height: 100px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+`;
+```
+
+</CodeGroup>
+
+## Typography
+
+Text components for different information types:
+
+```javascript PurchaseItem.js:26-44
+const NameText = styled.p`
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+`;
+
+const SubText = styled.p`
+  color: #939292;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin: 0;
+`;
+
+const PickUpText = styled.p`
+  color: black;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin: 0;
+`;
+```
+
+<Tip>
+PickUpText uses black color to emphasize important pickup logistics, while SubText uses gray (#939292) for de-emphasized information.
+</Tip>
+
+## Integration with Feed
+
+Purchases are initiated from the marketplace feed:
+
+```javascript Feed.js:26-29
+function handlePurchase(index) {
+  modifyItem(items[index]);
+  navigate("/purchase-item");
+}
+```
+
+<Card title="Transaction Flow" icon="arrow-right">
+  1. User clicks "Buy Now" in feed
+  2. Item data stored in parent state
+  3. Navigate to /purchase-item route
+  4. PurchaseItem component renders with item data
+  5. User reviews and completes payment
+</Card>
+
+## Payment Integration
+
+To implement actual payment processing:
+
+### CashApp Integration
+
+```javascript
+const handleCashAppPayment = () => {
+  // Deep link to CashApp with payment details
+  const cashappUrl = `https://cash.app/$username/${item.price}`;
+  window.location.href = cashappUrl;
+  
+  // Or use CashApp API for in-app payment
+};
+
+<CashAppButton onClick={handleCashAppPayment}>
+  $CashApp
+</CashAppButton>
+```
+
+### PayPal Integration
+
+```javascript
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
+const handlePayPalPayment = () => {
+  return {
+    createOrder: (data, actions) => {
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: item.price
+          },
+          description: item.item_name
+        }]
+      });
+    },
+    onApprove: async (data, actions) => {
+      const order = await actions.order.capture();
+      // Handle successful payment
+      console.log("Payment successful:", order);
+    }
+  };
+};
+```
+
+<Warning>
+**Security:** Never expose API keys or secrets in frontend code. Payment processing should go through your backend server.
+</Warning>
+
+## Backend Communication
+
+Recommended flow for completing transactions:
+
+<Steps>
+  <Step title="Initiate Payment">
+    User clicks payment button
+  </Step>
+  <Step title="Create Transaction">
+    Send transaction details to backend
+    ```javascript
+    const response = await axios.post('/api/transactions/create', {
+      itemId: item.id,
+      buyerId: currentUser.id,
+      sellerId: item.sellerId,
+      amount: item.price
+    });
+    ```
+  </Step>
+  <Step title="Process Payment">
+    Backend handles payment provider integration
+  </Step>
+  <Step title="Update Database">
+    Mark item as sold, update user history
+  </Step>
+  <Step title="Confirm to User">
+    Show success message and redirect
+    ```javascript
+    if (response.data.success) {
+      navigate('/profile');
+    }
+    ```
+  </Step>
+</Steps>
+
+## Pickup Information Container
+
+```javascript PurchaseItem.js:98-107
+const PickupInfoContainer = styled.div`
+  padding: 10px;
+  height: 100px;
+  background-color: white;
+  display: inline-flex;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  justify-content: space-evenly;
+`;
+```
+
+<Note>
+The container uses `justify-content: space-evenly` to distribute pickup location and time information evenly.
+</Note>
+
+## Form Structure
+
+There's an empty form element in the component:
+
+```javascript PurchaseItem.js:8-15,130
+const PurchaseForm = styled.form`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  flex-direction: row;
+  background: #fff;
+  margin-top: -20px;
+`;
+
+// In JSX:
+<PurchaseForm></PurchaseForm>
+```
+
+<Warning>
+The PurchaseForm component is defined but empty. Consider removing it or utilizing it for payment form inputs.
+</Warning>
+
+## Current Limitations
+
+<AccordionGroup>
+  <Accordion title="No Payment Processing">
+    Payment buttons are visual only; no actual transaction handling
+  </Accordion>
+  <Accordion title="Static Pickup Data">
+    Location and time are hardcoded, not from database
+  </Accordion>
+  <Accordion title="No Transaction History">
+    Completed purchases not recorded in user profile
+  </Accordion>
+  <Accordion title="Missing Confirmation">
+    No success/failure feedback after payment attempt
+  </Accordion>
+  <Accordion title="No Seller Notification">
+    Sellers not notified when their item is purchased
+  </Accordion>
+</AccordionGroup>
+
+## Recommended Enhancements
+
+<CardGroup cols={2}>
+  <Card title="Payment Gateway" icon="credit-card">
+    Integrate real CashApp and PayPal APIs
+  </Card>
+  <Card title="Transaction Records" icon="database">
+    Save completed transactions to database
+  </Card>
+  <Card title="Confirmation Screen" icon="check">
+    Show success page with transaction details
+  </Card>
+  <Card title="Email Notifications" icon="envelope">
+    Notify buyer and seller of transaction
+  </Card>
+  <Card title="Dynamic Pickup" icon="map">
+    Load pickup details from item/seller data
+  </Card>
+  <Card title="Inventory Management" icon="boxes">
+    Update item availability after purchase
+  </Card>
+</CardGroup>
+
+## Related Documentation
+
+<CardGroup cols={2}>
+  <Card title="Marketplace Feed" icon="list" href="/features/marketplace-feed">
+    Where purchases are initiated
+  </Card>
+  <Card title="User Profiles" icon="user" href="/features/user-profiles">
+    View purchase history
+  </Card>
+  <Card title="Purchase Component" icon="code" href="/components/purchase-item">
+    Technical implementation details
+  </Card>
+  <Card title="Backend Integration" icon="server" href="/development/backend-integration">
+    Set up transaction APIs
+  </Card>
+</CardGroup>
+
+## Security Considerations
+
+<Note>
+**Payment Security Best Practices:**
+- Never store payment credentials on the frontend
+- Use HTTPS for all transaction-related requests
+- Implement server-side validation of transaction amounts
+- Use payment provider webhooks to verify completed transactions
+- Implement rate limiting to prevent abuse
+- Log all transaction attempts for auditing
+</Note>
+
+## Testing Scenarios
+
+<Tabs>
+  <Tab title="Happy Path">
+    1. User navigates from feed to purchase page
+    2. Item details display correctly
+    3. Pickup information is visible
+    4. Payment buttons are clickable
+    5. Transaction completes successfully
+    6. User redirected to confirmation/profile
+  </Tab>
+  <Tab title="Error Cases">
+    - Item no longer available
+    - Payment processing fails
+    - Network error during transaction
+    - Invalid item data
+    - User authentication expires
+  </Tab>
+  <Tab title="Edge Cases">
+    - Very expensive items (price validation)
+    - Items with special characters in name
+    - Missing pickup information
+    - Duplicate purchase attempts
+  </Tab>
+</Tabs>
+
+## Next Steps
+
+After completing a purchase:
+1. View transaction in [user profile](/features/user-profiles)
+2. [Message seller](/features/messaging) to arrange pickup
+3. Return to [marketplace feed](/features/marketplace-feed) to continue browsing
+4. Leave a review for the seller (future feature)

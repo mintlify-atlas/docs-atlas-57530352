@@ -1,0 +1,171 @@
+---
+title: Welcome to Trojan Marketplace
+description: A modern React-based marketplace platform for the USC community to buy, sell, and trade items with fellow Trojans.
+---
+
+<img
+  className="block dark:hidden"
+  src="https://www.simpleimageresizer.com/_uploads/photos/f140f7ce/USC_map_pic_1_750x750.png"
+  alt="Trojan Marketplace Hero"
+/>
+<img
+  className="hidden dark:block"
+  src="https://www.simpleimageresizer.com/_uploads/photos/f140f7ce/USC_map_pic_1_750x750.png"
+  alt="Trojan Marketplace Hero"
+/>
+
+## Welcome to the Trojan Marketplace
+
+Trojan Marketplace is a full-stack web application built with React that enables USC students to seamlessly buy, sell, and trade items within the Trojan community. Built with modern web technologies and powered by a robust Java servlet backend, the platform offers a secure and intuitive marketplace experience.
+
+<Note>
+  **Meet-up Locations**: Once items are sold, meet-ups will be at RTCC Entrance 4 and Leavey Library for safe and convenient exchanges.
+</Note>
+
+## Key Features
+
+Trojan Marketplace provides everything you need for a complete marketplace experience:
+
+<CardGroup cols={2}>
+  <Card
+    title="Authentication System"
+    icon="lock"
+    href="/features/authentication"
+  >
+    Secure login and account creation with email-based authentication connected to a Java servlet backend.
+  </Card>
+  <Card
+    title="Marketplace Feed"
+    icon="grid"
+    href="/features/marketplace-feed"
+  >
+    Browse a dynamic feed of items with real-time data fetching from the backend API using Axios.
+  </Card>
+  <Card
+    title="Item Listings"
+    icon="tag"
+    href="/features/item-listings"
+  >
+    Create detailed item listings with descriptions, prices, and images for other Trojans to discover.
+  </Card>
+  <Card
+    title="Direct Messaging"
+    icon="message"
+    href="/features/messaging"
+  >
+    Connect with sellers through the built-in messaging system to arrange purchases and ask questions.
+  </Card>
+  <Card
+    title="User Profiles"
+    icon="user"
+    icon-type="solid"
+    href="/features/user-profiles"
+  >
+    Manage your personal profile, view your active listings, and track your marketplace activity.
+  </Card>
+  <Card
+    title="Transaction Management"
+    icon="money-bill"
+    href="/features/transactions"
+  >
+    Complete purchases with a streamlined checkout flow and transaction tracking system.
+  </Card>
+</CardGroup>
+
+## Technology Stack
+
+Trojan Marketplace is built with modern, industry-standard technologies:
+
+<CardGroup cols={3}>
+  <Card title="React 18.2" icon="react">
+    Modern React with hooks for building interactive user interfaces
+  </Card>
+  <Card title="React Router 6" icon="route">
+    Client-side routing for seamless navigation between pages
+  </Card>
+  <Card title="Styled Components" icon="paintbrush">
+    Component-scoped styling with CSS-in-JS for maintainable styles
+  </Card>
+  <Card title="Axios" icon="plug">
+    Promise-based HTTP client for backend API communication
+  </Card>
+  <Card title="Java Servlets" icon="server">
+    Robust backend API handling authentication and data management
+  </Card>
+  <Card title="Create React App" icon="box">
+    Optimized build configuration and development tooling
+  </Card>
+</CardGroup>
+
+## Quick Links
+
+<CardGroup cols={2}>
+  <Card
+    title="Quickstart"
+    icon="rocket"
+    href="/quickstart"
+  >
+    Get the marketplace running on your local machine in under 5 minutes
+  </Card>
+  <Card
+    title="Installation Guide"
+    icon="download"
+    href="/installation"
+  >
+    Detailed setup instructions including prerequisites and configuration
+  </Card>
+  <Card
+    title="Development Setup"
+    icon="code"
+    href="/development/setup"
+  >
+    Learn how to set up your development environment and contribute to the project
+  </Card>
+  <Card
+    title="Architecture Overview"
+    icon="sitemap"
+    href="/development/architecture"
+  >
+    Understand the application structure and component organization
+  </Card>
+</CardGroup>
+
+## Application Routes
+
+The application includes the following main routes defined in `src/Main.js:28-49`:
+
+- `/` - Home landing page with marketplace introduction
+- `/login` - User authentication and login
+- `/create-account` - New user registration
+- `/feed` - Main marketplace feed displaying all available items
+- `/profile` - User profile and account management
+- `/create-sale` - Create new item listings
+- `/purchase-item` - Complete item purchases
+- `/message` - Direct messaging with sellers
+
+## Getting Started
+
+Ready to explore the Trojan Marketplace? Follow these steps:
+
+<Steps>
+  <Step title="Install Dependencies">
+    Clone the repository and run `npm install` to install all required packages including React, React Router, Axios, and Styled Components.
+  </Step>
+  <Step title="Configure Backend">
+    Set up the Java servlet backend at `http://localhost:8080/Final_Project/` to handle authentication and data requests.
+  </Step>
+  <Step title="Start Development Server">
+    Run `npm start` to launch the development server and open the application at `http://localhost:3000`.
+  </Step>
+  <Step title="Explore Features">
+    Create an account, browse the marketplace feed, and start listing or purchasing items!
+  </Step>
+</Steps>
+
+<Card
+  title="Need Help?"
+  icon="question-circle"
+  href="/quickstart"
+>
+  Check out the quickstart guide for step-by-step instructions to get up and running.
+</Card>

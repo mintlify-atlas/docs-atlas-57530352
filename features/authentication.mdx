@@ -1,0 +1,282 @@
+---
+title: 'Authentication'
+description: 'User authentication system with login and account creation'
+---
+
+## Overview
+
+The Trojan Marketplace authentication system provides secure login and account creation functionality. Users can create accounts with email and password, then log in to access marketplace features.
+
+<Note>
+Authentication is handled through servlet-based backend endpoints with axios for HTTP requests.
+</Note>
+
+## Login System
+
+The login component provides a clean, centered form for user authentication.
+
+### Key Features
+
+<CardGroup cols={2}>
+  <Card title="Email Validation" icon="envelope">
+    Built-in HTML5 email validation ensures proper format
+  </Card>
+  <Card title="Error Handling" icon="triangle-exclamation">
+    Clear error messages for invalid credentials or connection issues
+  </Card>
+  <Card title="Navigation" icon="arrow-right">
+    Automatic redirect to feed upon successful login
+  </Card>
+  <Card title="Account Creation Link" icon="user-plus">
+    Direct link to create account for new users
+  </Card>
+</CardGroup>
+
+### Implementation
+
+The login form handler submits credentials to the backend servlet:
+
+```javascript Login.js:75-101
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/Final_Project/LoginServlet",
+      `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+    
+    console.log(response.data);
+    if (response.data===true) {
+      props.logIn();
+      navigate("/feed");
+      console.log("true");
+    } else {
+      setError("Invalid username or password");
+      console.log("false");
+    }
+  } catch (error) {
+    console.error("Error during login request:", error);
+    setError("An error occurred. Please try again.");
+  }
+};
+```
+
+<Tip>
+The login handler uses URL-encoded form data and properly encodes user input to prevent injection attacks.
+</Tip>
+
+### State Management
+
+The component uses React hooks to manage form state:
+
+```javascript Login.js:70-73
+const [username, setUsername] = useState("");
+const [password, setPassword] = useState("");
+const [error, setError] = useState("");
+const navigate = useNavigate();
+```
+
+### Form Structure
+
+The login form includes email and password fields with proper labels:
+
+```javascript Login.js:113-133
+<label for="email">Email</label>
+<input
+  onChange={(e) => setUsername(e.target.value)}
+  value={username}
+  type="email"
+  id="email"
+  name="email"
+  required
+/>
+<label for="password">Password</label>
+<input
+  onChange={(e) => setPassword(e.target.value)}
+  value={password}
+  type="password"
+  id="password"
+  name="password"
+  required
+/>
+<p style={{width: "100%", textAlign:"left"}}>No Account? <Link to="/create-account">Create Account</Link></p>
+<input type="submit" value="Log In" />
+{error && <p style={{color: "red"}}>{error}</p>}
+```
+
+## Account Creation
+
+New users can register for the marketplace through the account creation form.
+
+### Registration Flow
+
+<AccordionGroup>
+  <Accordion title="Step 1: Enter Information">
+    Users provide their name, email, and password through a styled form interface.
+  </Accordion>
+  <Accordion title="Step 2: Submit to Backend">
+    Form data is sent to CreateAccountServlet as URL-encoded parameters.
+  </Accordion>
+  <Accordion title="Step 3: Account Validation">
+    Backend validates the information and creates the account if valid.
+  </Accordion>
+  <Accordion title="Step 4: Redirect to Login">
+    Upon successful creation, users are redirected to the login page.
+  </Accordion>
+</AccordionGroup>
+
+### Create Account Handler
+
+```javascript CreateAccount.js:81-109
+const handleSubmit = async (event) => {
+  event.preventDefault();
+
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/Final_Project/CreateAccountServlet",
+      `username=${encodeURIComponent(username)}&password=${encodeURIComponent(
+        password
+      )}`,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
+    console.log(response.data);
+    if (response.data === true) {
+      navigate("/login");
+      console.log("true");
+    } else {
+      // setError("Invalid username or password");
+      console.log("false");
+    }
+  } catch (error) {
+    console.error("Error during login request:", error);
+    //   setError("An error occurred. Please try again.");
+  }
+};
+```
+
+<Warning>
+The current implementation has commented-out error handling. Consider implementing proper error state management for production use.
+</Warning>
+
+### Form Fields
+
+The registration form collects user information:
+
+```javascript CreateAccount.js:121-152
+<label for="name">Name</label>
+<input
+  type="text"
+  id="name"
+  name="name"
+  required
+/>
+<label for="email">Email</label>
+<input
+  onChange={(e) => setUsername(e.target.value)}
+  value={username}
+  type="email"
+  id="email"
+  name="email"
+  required
+/>
+<label for="password">Password</label>
+<input
+  onChange={(e) => setPassword(e.target.value)}
+  value={password}
+  type="password"
+  id="password"
+  name="password"
+  required
+/>
+<p style={{ width: "100%", textAlign: "left" }}>
+  Already have an account? <Link to="/create-account">Log In</Link>
+</p>
+<input type="submit" value="Create Account" />
+```
+
+## Styling
+
+Both authentication components use styled-components for consistent styling:
+
+```javascript Login.js:6-67
+const StyledLogin = styled.div`
+  body {
+    font-family: "Lato", sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+  }
+
+  h1 {
+    font-family: "Adobe Devanagari", sans-serif;
+    font-size: 36px;
+    margin: 0 0 40px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    max-width: 90%;
+  }
+  // ... additional styles
+`;
+```
+
+## Related Documentation
+
+<CardGroup cols={2}>
+  <Card title="Backend Integration" icon="server" href="/development/backend-integration">
+    Learn about servlet configuration and API endpoints
+  </Card>
+  <Card title="API Authentication" icon="key" href="/api/authentication">
+    View authentication API reference
+  </Card>
+  <Card title="User Profiles" icon="user" href="/features/user-profiles">
+    Explore user profile features after login
+  </Card>
+  <Card title="Styling Guide" icon="palette" href="/development/styling">
+    Learn about the styled-components approach
+  </Card>
+</CardGroup>
+
+## Security Considerations
+
+<Note>
+**Important Security Notes:**
+- Credentials are URL-encoded to prevent injection attacks
+- Password fields use `type="password"` to mask input
+- Form validation ensures required fields are completed
+- Backend servlet handles authentication verification
+</Note>
+
+## Next Steps
+
+After successful authentication, users can:
+- Browse the [marketplace feed](/features/marketplace-feed)
+- Create [item listings](/features/item-listings)
+- View their [user profile](/features/user-profiles)
+- Start [messaging](/features/messaging) with sellers

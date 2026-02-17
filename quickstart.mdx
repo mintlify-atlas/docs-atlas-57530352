@@ -1,80 +1,253 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quickstart
+description: Get the Trojan Marketplace running on your local machine in under 5 minutes.
 ---
 
-## Get started in three steps
+## Get Started in 5 Minutes
 
-Get your documentation site running locally and make your first customization.
-
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
+This quickstart guide will help you run the Trojan Marketplace application on your local machine quickly. For detailed installation instructions, see the [Installation Guide](/installation).
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  **Prerequisites**: Make sure you have Node.js (version 14 or higher) and npm installed on your machine.
 </Note>
+
+## Quick Setup
+
+<Steps>
+  <Step title="Clone the Repository">
+    Clone the Trojan Marketplace repository to your local machine:
+    
+    ```bash
+    git clone <repository-url>
+    cd csci201-final-project
+    ```
+  </Step>
+
+  <Step title="Install Dependencies">
+    Install all required npm packages defined in `package.json:5-16`:
+    
+    ```bash
+    npm install
+    ```
+    
+    This will install:
+    - **React 18.2.0** - Core UI library
+    - **React Router DOM 6.10.0** - Client-side routing
+    - **Axios 1.3.6** - HTTP client for API calls
+    - **Styled Components 5.3.9** - CSS-in-JS styling
+    - **React Scripts 5.0.1** - Build tooling from Create React App
+  </Step>
+
+  <Step title="Start the Development Server">
+    Launch the application using the start script from `package.json:18`:
+    
+    ```bash
+    npm start
+    ```
+    
+    The development server will automatically:
+    - Start on `http://localhost:3000`
+    - Open in your default browser
+    - Enable hot reload for live code changes
+    - Display lint errors in the console
+  </Step>
+
+  <Step title="Access the Application">
+    Once the server starts, navigate to `http://localhost:3000` in your browser. You'll see the Trojan Marketplace home page as defined in `src/Home.js:4-22`.
+  </Step>
+</Steps>
+
+<Check>
+  **Success!** You should now see the Trojan Marketplace home page with the USC map and welcome message.
+</Check>
+
+## What You'll See
+
+After starting the application, you'll land on the home page featuring:
+
+- **Welcome Message**: "Welcome to the Trojan Marketplace" with instructions to login and access the feed
+- **USC Campus Map**: Visual representation of the campus
+- **Meet-up Information**: Details about RTCC Entrance 4 and Leavey Library as designated meeting locations
+- **Navigation Bar**: Access to Login, Profile, Create Sale, and Feed pages (implemented in `src/Navbar.js:91-126`)
+
+<CodeGroup>
+```jsx Home Component (src/Home.js:4-22)
+function Home() {
+  return (
+    <div className="container">
+      <div className="image">
+        <img
+          src="https://www.simpleimageresizer.com/_uploads/photos/f140f7ce/USC_map_pic_1_750x750.png"
+          alt="large image"
+        />
+      </div>
+      <div className="rectangles">
+        <div className="rectangle">
+          <h2 style={{textAlign: 'center'}}>Welcome to the Trojan Marketplace</h2>
+          <p style={{textAlign: 'center'}}>To get started, please click the login button to access the feed</p>
+          <p style={{textAlign: 'center'}}>Once items are sold, meet ups will be at RTCC, Entrance 4, and Leavey Library</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+</CodeGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Configure Backend"
+    icon="server"
+    href="/development/backend-integration"
+  >
+    Set up the Java servlet backend to enable authentication and data fetching
+  </Card>
+  <Card
+    title="Explore Features"
+    icon="compass"
+    href="/features/authentication"
+  >
+    Learn about authentication, marketplace feed, and messaging features
+  </Card>
+  <Card
+    title="View Components"
+    icon="cubes"
+    href="/components/navbar"
+  >
+    Understand the component structure including Navbar, Feed, and Profile
+  </Card>
+  <Card
+    title="API Integration"
+    icon="plug"
+    href="/api/authentication"
+  >
+    Learn how to integrate with the backend API endpoints
+  </Card>
+</CardGroup>
+
+## Available Commands
+
+The project includes several npm scripts defined in `package.json:17-22`:
+
+<AccordionGroup>
+  <Accordion title="npm start" icon="play">
+    **Runs the app in development mode**
+    
+    ```bash
+    npm start
+    ```
+    
+    - Opens `http://localhost:3000` in your browser
+    - Enables hot reload for instant updates
+    - Displays lint errors in the console
+    - Perfect for local development
+  </Accordion>
+
+  <Accordion title="npm test" icon="vial">
+    **Launches the test runner**
+    
+    ```bash
+    npm test
+    ```
+    
+    - Runs tests in interactive watch mode
+    - Uses Jest and React Testing Library
+    - Automatically re-runs tests on file changes
+  </Accordion>
+
+  <Accordion title="npm run build" icon="hammer">
+    **Creates a production build**
+    
+    ```bash
+    npm run build
+    ```
+    
+    - Builds optimized production bundle to `build/` folder
+    - Minifies code and includes hashes in filenames
+    - Optimizes performance for deployment
+    - Ready for production deployment
+  </Accordion>
+
+  <Accordion title="npm run eject" icon="eject">
+    **Ejects from Create React App**
+    
+    ```bash
+    npm run eject
+    ```
+    
+    <Warning>
+      **One-way operation!** This cannot be undone. Only eject if you need full control over webpack, Babel, and ESLint configuration.
+    </Warning>
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Port 3000 is already in use">
+    If port 3000 is occupied, you can either:
+    - Stop the process using port 3000
+    - Set a different port: `PORT=3001 npm start`
+  </Accordion>
+
+  <Accordion title="Backend connection errors">
+    The application expects the backend at `http://localhost:8080/Final_Project/`. Ensure:
+    - The Java servlet backend is running
+    - The backend is accessible at the correct URL
+    - CORS is properly configured on the backend
+    
+    API endpoints used:
+    - `LoginServlet` (src/Login.js:80)
+    - `ItemFetchServlet` (src/Feed.js:15)
+  </Accordion>
+
+  <Accordion title="npm install fails">
+    Try these solutions:
+    - Clear npm cache: `npm cache clean --force`
+    - Delete `node_modules` and `package-lock.json`, then reinstall
+    - Update npm: `npm install -g npm@latest`
+    - Check your Node.js version meets requirements
+  </Accordion>
+
+  <Accordion title="Styles not loading correctly">
+    The application uses Styled Components (version 5.3.9). If styles aren't loading:
+    - Ensure styled-components is properly installed
+    - Check that CSS files are imported correctly
+    - Clear browser cache and reload
+  </Accordion>
+</AccordionGroup>
+
+## Development Workflow
+
+Once you have the app running, here's a typical development workflow:
+
+<Steps>
+  <Step title="Navigate to Login">
+    Click the "Login" link in the navbar to access the authentication page (route: `/login` defined in `src/Main.js:30`).
+  </Step>
+
+  <Step title="Create an Account">
+    If you don't have an account, click "Create Account" to register (route: `/create-account` defined in `src/Main.js:48`).
+  </Step>
+
+  <Step title="Access the Feed">
+    After logging in, you'll be redirected to the marketplace feed (route: `/feed` defined in `src/Main.js:32-36`) where all items are displayed.
+  </Step>
+
+  <Step title="Browse and Interact">
+    From the feed, you can:
+    - Click "Message" to contact sellers (navigates to `/message`)
+    - Click "Buy Now" to purchase items (navigates to `/purchase-item`)
+    - Use "Create Sale" in the navbar to list your own items
+  </Step>
+</Steps>
+
+<Card
+  title="Ready for More?"
+  icon="book-open"
+  href="/installation"
+>
+  Check out the detailed installation guide for complete setup instructions, backend configuration, and production deployment.
+</Card>

@@ -1,0 +1,458 @@
+---
+title: 'Messaging'
+description: 'Communicate with buyers and sellers through the marketplace messaging system'
+---
+
+## Overview
+
+The messaging system enables direct communication between buyers and sellers. Users can discuss item details, negotiate prices, and arrange pickup or delivery through a clean, chat-style interface.
+
+<Note>
+Messaging is initiated from the marketplace feed by clicking the "Message" button on any item listing.
+</Note>
+
+## Message Interface
+
+### UI Components
+
+<CardGroup cols={2}>
+  <Card title="Item Context" icon="box">
+    Item details displayed at top for reference
+  </Card>
+  <Card title="Message Thread" icon="comments">
+    Chat-style conversation view with sent/received styling
+  </Card>
+  <Card title="Input Form" icon="keyboard">
+    Message composition with send button
+  </Card>
+  <Card title="Seller Info" icon="user">
+    Seller name shown in item context
+  </Card>
+</CardGroup>
+
+## Item Context Display
+
+The message view shows relevant item information at the top:
+
+```javascript Message.js:136-145
+<InfoContainer>
+  <div style={{ display: "flex", gap: "20px" }}>
+    <SquareImage src={"/v3_87.png"} alt="couch" />
+    <InfoDiv>
+      <NameText>{item.item_name}</NameText>
+      <SubText>{item.item_description}</SubText>
+      <SubText>Seller: Tommy T</SubText>
+    </InfoDiv>
+  </div>
+</InfoContainer>
+```
+
+<AccordionGroup>
+  <Accordion title="Item Image">
+    Square thumbnail image (80x80px) shows the product
+  </Accordion>
+  <Accordion title="Item Name">
+    Displayed as bold heading for quick reference
+  </Accordion>
+  <Accordion title="Description">
+    Brief description helps contextualize the conversation
+  </Accordion>
+  <Accordion title="Seller Information">
+    Shows who you're communicating with
+  </Accordion>
+</AccordionGroup>
+
+## Message Display
+
+Messages are shown in a scrollable container with distinct styling for sent vs. received:
+
+```javascript Message.js:146-159
+<MessagesContainer>
+  <div class="timestamp">09:10 AM</div>
+  <div className="message-received">
+    <span>Hi, Tommy!</span>
+  </div>
+  <div className="message-received">
+    <span>How are you?</span>
+  </div>
+  {messages.map((message, index) => (
+    <div className="message-sent" key={index}>
+      <span>{message}</span>
+    </div>
+  ))}
+</MessagesContainer>
+```
+
+### Message Styling
+
+Received and sent messages have different visual treatments:
+
+<Tabs>
+  <Tab title="Received Messages">
+    ```javascript Message.js:62-74
+    .message-received {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .message-received span {
+      background: #e6e6e6;
+      width: fit-content;
+      padding: 10px;
+      margin: 2px;
+      border-radius: 20px;
+    }
+    ```
+    
+    Received messages appear on the left with gray background (#e6e6e6)
+  </Tab>
+  <Tab title="Sent Messages">
+    ```javascript Message.js:76-88
+    .message-sent {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .message-sent span {
+      width: fit-content;
+      padding: 10px;
+      margin: 2px;
+      border-radius: 20px;
+      background: #fcc901;
+      margin-right: 0;
+    }
+    ```
+    
+    Sent messages appear on the right with gold background (#fcc901)
+  </Tab>
+  <Tab title="Timestamps">
+    ```javascript Message.js:56-60
+    .timestamp {
+      color: #aaaaaa;
+      width: 100%;
+      text-align: center;
+    }
+    ```
+    
+    Timestamps centered in gray text for temporal context
+  </Tab>
+</Tabs>
+
+## Sending Messages
+
+### State Management
+
+```javascript Message.js:122-123
+const [messages, setMessages] = useState([]);
+const [newMessage, setNewMessage] = useState("");
+```
+
+<Tip>
+The `messages` array stores all sent messages, while `newMessage` tracks the current input field value.
+</Tip>
+
+### Message Handler
+
+When users submit a message, it's added to the local state:
+
+```javascript Message.js:125-131
+const handleMessageSubmit = (event) => {
+  event.preventDefault();
+  if (newMessage.trim() !== "") {
+    setMessages([...messages, newMessage]);
+    setNewMessage("");
+  }
+};
+```
+
+<Steps>
+  <Step title="Prevent Default">
+    Stops form from reloading the page
+  </Step>
+  <Step title="Validate Input">
+    Checks that message isn't empty or just whitespace
+  </Step>
+  <Step title="Update State">
+    Adds new message to messages array
+  </Step>
+  <Step title="Clear Input">
+    Resets the input field to empty string
+  </Step>
+</Steps>
+
+### Message Form
+
+The input form is positioned at the bottom:
+
+```javascript Message.js:160-168
+<MessageForm onSubmit={handleMessageSubmit}>
+  <MessageInput
+    type="text"
+    placeholder="Type your message here"
+    value={newMessage}
+    onChange={(event) => setNewMessage(event.target.value)}
+  />
+  <SendMessageButton type="submit">Send</SendMessageButton>
+</MessageForm>
+```
+
+## Component Structure
+
+The messaging page uses styled-components for layout:
+
+### Container Hierarchy
+
+```javascript Message.js:134-170
+<StyledMessagingPage>
+  <OuterContainer>
+    <InfoContainer>
+      {/* Item details */}
+    </InfoContainer>
+    <MessagesContainer>
+      {/* Message thread */}
+    </MessagesContainer>
+    <MessageForm>
+      {/* Input form */}
+    </MessageForm>
+  </OuterContainer>
+</StyledMessagingPage>
+```
+
+### Styled Components
+
+<CodeGroup>
+
+```javascript Outer Container (Message.js:8-16)
+const OuterContainer = styled.div`
+  width: 700px;
+  background-color: #efefee;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+```
+
+```javascript Message Input (Message.js:100-106)
+const MessageInput = styled.input`
+  flex: 1;
+  margin-right: 10px;
+  width: 100%;
+  background: #e6e6e6;
+  border-radius: 20px !important;
+`;
+```
+
+```javascript Send Button (Message.js:108-119)
+const SendMessageButton = styled.button`
+  background-color: #304ffe;
+  :hover {
+    background-color: #536dfe;
+  }
+  margin-top: 5px;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
+```
+
+</CodeGroup>
+
+## Props and Context
+
+The MessagingPage component receives item data:
+
+<ParamField path="item" type="object" required>
+  Item object containing details for the conversation context
+  
+  **Properties:**
+  - `item_name`: String - Name of the item
+  - `item_description`: String - Item description
+  - `image_url`: String - URL to item image
+  - Additional item properties from the marketplace feed
+</ParamField>
+
+### Usage Example
+
+```jsx
+import MessagingPage from './Message';
+
+function App() {
+  const selectedItem = {
+    item_name: "Space Heater",
+    item_description: "Barely used, works great",
+    image_url: "/heater.jpeg"
+  };
+  
+  return <MessagingPage item={selectedItem} />;
+}
+```
+
+## Scrolling Behavior
+
+The messages container is scrollable for long conversations:
+
+```javascript Message.js:50-55
+const MessagesContainer = styled.div`
+  flex: 1;
+  padding: 20px;
+  overflow-y: scroll;
+  background: #fff;
+  /* ... styles */
+`;
+```
+
+<Tip>
+Consider adding auto-scroll to the latest message when new messages are added:
+
+```javascript
+const messagesEndRef = useRef(null);
+
+const scrollToBottom = () => {
+  messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+};
+
+useEffect(() => {
+  scrollToBottom();
+}, [messages]);
+
+// In JSX:
+<div ref={messagesEndRef} />
+```
+</Tip>
+
+## Current Limitations
+
+<Warning>
+**Backend Integration:** The current implementation stores messages only in local component state. Messages are not persisted to the backend and will be lost on page refresh.
+</Warning>
+
+### Recommended Enhancements
+
+<AccordionGroup>
+  <Accordion title="Backend Persistence">
+    Send messages to a backend API endpoint and fetch message history
+  </Accordion>
+  <Accordion title="Real-time Updates">
+    Implement WebSocket or polling to show new messages from the other user
+  </Accordion>
+  <Accordion title="Message History">
+    Load previous conversations when opening a thread
+  </Accordion>
+  <Accordion title="Read Receipts">
+    Show when messages have been seen by the recipient
+  </Accordion>
+  <Accordion title="Typing Indicators">
+    Display when the other user is typing a message
+  </Accordion>
+</AccordionGroup>
+
+## Visual Design
+
+### Color Scheme
+
+| Element | Color | Usage |
+|---------|-------|-------|
+| Sent messages | #fcc901 (Gold) | USC themed, matches brand |
+| Received messages | #e6e6e6 (Light gray) | Neutral, distinguishes from sent |
+| Send button | #304ffe (Blue) | Action color, clear CTA |
+| Background | #efefee (Off-white) | Subtle, reduces eye strain |
+| Timestamps | #aaaaaa (Gray) | De-emphasized, informational |
+
+### Typography
+
+```javascript Message.js:17-28
+const NameText = styled.p`
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+`;
+
+const SubText = styled.p`
+  color: #939292;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin: 0;
+`;
+```
+
+## Integration with Feed
+
+Messaging is initiated from the marketplace feed:
+
+```javascript Feed.js:30-33
+function handleMessage(index) {
+  modifyItem(items[index]);
+  navigate("/message");
+}
+```
+
+<Card title="Message Flow" icon="arrow-right">
+  1. User browses feed
+  2. Clicks "Message" on an item
+  3. Item data passed to Message component
+  4. Conversation opens with item context
+</Card>
+
+## Related Documentation
+
+<CardGroup cols={2}>
+  <Card title="Marketplace Feed" icon="list" href="/features/marketplace-feed">
+    Where messaging is initiated
+  </Card>
+  <Card title="Message Component" icon="code" href="/components/message">
+    Technical component details
+  </Card>
+  <Card title="User Profiles" icon="user" href="/features/user-profiles">
+    View seller profiles and history
+  </Card>
+  <Card title="Backend Integration" icon="server" href="/development/backend-integration">
+    Implement message persistence
+  </Card>
+</CardGroup>
+
+## Accessibility Considerations
+
+<Note>
+**Best Practices:**
+- Use semantic HTML for form elements
+- Ensure keyboard navigation works for input and send button
+- Add ARIA labels for screen readers
+- Provide visual focus indicators
+- Maintain sufficient color contrast ratios
+</Note>
+
+## Testing Scenarios
+
+<Tabs>
+  <Tab title="Happy Path">
+    1. Navigate to message page with item
+    2. Type message in input field
+    3. Click Send button
+    4. Message appears in thread
+    5. Input field clears
+  </Tab>
+  <Tab title="Edge Cases">
+    - Empty messages (should be blocked)
+    - Very long messages (should wrap properly)
+    - Rapid message sending (should all appear)
+    - Special characters in messages
+  </Tab>
+  <Tab title="Error Cases">
+    - Missing item data
+    - Network errors (future backend integration)
+    - Invalid input characters
+  </Tab>
+</Tabs>
+
+## Next Steps
+
+After starting a conversation:
+1. Continue to [purchase the item](/features/transactions)
+2. Check [seller's profile](/features/user-profiles) for ratings
+3. Return to [feed](/features/marketplace-feed) to browse more items
+4. Monitor messages for seller responses (future feature)

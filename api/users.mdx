@@ -1,0 +1,81 @@
+---
+title: 'Users API'
+description: 'Endpoints for user profile management and user data'
+---
+
+## Overview
+
+The Users API provides endpoints for managing user profiles and user-related data in the Trojan Marketplace application.
+
+## User Context
+
+User authentication is handled through the [Authentication API](/api/authentication). Once authenticated, user sessions are managed to maintain login state across the application.
+
+### Session Management
+
+When a user successfully logs in through the LoginServlet, the application maintains the authentication state. This is implemented in the Login component:
+
+```javascript Login.js:89-91
+if (response.data===true) {
+  props.logIn();
+  navigate("/feed");
+}
+```
+
+The `logIn()` callback updates the application's authentication state, allowing users to access protected routes and features.
+
+## User Data in Items
+
+User information is associated with marketplace items. When items are created through the AddItemServlet, they are linked to the authenticated user's account.
+
+### Item Ownership
+
+Each item listing in the marketplace is associated with the user who created it. This relationship enables:
+
+- Displaying seller information on item listings
+- Enabling messaging between buyers and sellers
+- Managing user's own listings
+
+## User Interactions
+
+The Users API supports various user interactions within the marketplace:
+
+### Messaging
+
+Users can message each other about items. This functionality is accessed through the Feed component:
+
+```javascript Feed.js:30-33
+function handleMessage(index) {
+  modifyItem(items[index]);
+  navigate("/message");
+}
+```
+
+### Purchase Flow
+
+Users can initiate purchases, which requires user authentication:
+
+```javascript Feed.js:26-29
+function handlePurchase(index) {
+  modifyItem(items[index]);
+  navigate("/purchase-item");
+}
+```
+
+## Account Creation Flow
+
+New users can create accounts through the CreateAccountServlet. The account creation process:
+
+1. User submits email and password
+2. Account is created in the system
+3. User is redirected to login page
+4. User can then authenticate and access marketplace features
+
+See the [Authentication API](/api/authentication) for detailed endpoint specifications.
+
+## Related Pages
+
+- [Authentication API](/api/authentication)
+- [User Profiles Feature](/features/user-profiles)
+- [Messaging Feature](/features/messaging)
+- [Transactions Feature](/features/transactions)

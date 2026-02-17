@@ -1,0 +1,303 @@
+---
+title: "Purchase Item Component"
+description: "Item purchase interface displaying item details, pickup information, and payment options for the Trojan Marketplace."
+---
+
+## Overview
+
+The PurchaseItem component provides a dedicated interface for users to complete item purchases. It displays comprehensive item details, pickup location and time information, and payment options through CashApp and PayPal.
+
+## Location
+
+`src/PurchaseItem.js`
+
+## Props
+
+<ParamField path="item" type="object" required>
+  The selected item object passed from the Feed component, containing:
+  - `item_name` - Name of the item
+  - `item_description` - Description text
+  - `image_url` - URL to the item image
+  - `price` - Item price
+</ParamField>
+
+## Features
+
+### Purchase Banner
+
+A prominent gold banner at the top identifies this as a purchase page:
+
+```javascript
+<PurchaseBanner> Purchase </PurchaseBanner>
+```
+
+Styled with USC gold colors:
+```javascript
+const PurchaseBanner = styled.div`
+  font-size: 1.4em;
+  font-weight: 600;
+  background-color: #efd465;
+  display: flow-root;
+  margin-top: 5px;
+  color: black;
+  padding: 8px 16px;
+  text-align: center;
+`;
+```
+
+### Item Information Display
+
+Displays key item details with image:
+
+```javascript
+<InfoContainer>
+  <div style={{ display: "flex", gap: "20px" }}>
+    <SquareImage src={item.image_url} alt="couch" />
+    <InfoDiv>
+      <NameText>{item.item_description} - ${item.price}</NameText>
+      <SubText>{item.item_description}</SubText>
+      <SubText>Seller: Tommy T</SubText>
+    </InfoDiv>
+  </div>
+</InfoContainer>
+```
+
+**Displayed Information:**
+- Item image (80x80px square)
+- Item description with price
+- Seller name (currently hardcoded as "Tommy T")
+
+### Pickup Information
+
+Provides transaction logistics details:
+
+```javascript
+<PickupInfoContainer>
+  <PickUpText>Pickup Location </PickUpText>
+  <SubText> 0.2 miles from USC</SubText>
+  <PickUpText>Pickup Time </PickUpText>
+  <SubText> Mar.29, 2023- 7 P.M. </SubText>
+</PickupInfoContainer>
+```
+
+<Note>
+Pickup location and time are currently hardcoded. In production, these should be dynamic based on the item or seller preferences.
+</Note>
+
+### Payment Options
+
+Two payment buttons styled in gold:
+
+```javascript
+<SubText>Buy Now: </SubText>
+<CashAppButton type="submit"> $CashApp </CashAppButton>
+<PayPalButton type="submit"> PayPal </PayPalButton>
+```
+
+Both buttons share similar styling:
+```javascript
+const CashAppButton = styled.div`
+  background-color: #f9d440;
+  margin-top: 5px;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+`;
+
+const PayPalButton = styled.div`
+  background-color: #f9d440;
+  margin-top: 5px;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+`;
+```
+
+<Warning>
+The payment buttons currently have no click handlers or functionality. They are styled as buttons but don't process payments or redirect to payment services.
+</Warning>
+
+## Layout Structure
+
+The component uses a centered container layout:
+
+```javascript
+const OuterContainer = styled.div`
+  width: 700px;
+  background-color: #efefee;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+```
+
+- **Container width**: 700px
+- **Background**: Light gray (#efefee)
+- **Centered**: Auto margins
+- **Spacing**: 10px gap between sections
+
+## Styled Components
+
+### Container Styles
+
+```javascript
+const InfoContainer = styled.div`
+  padding: 10px;
+  height: 100px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const PickupInfoContainer = styled.div`
+  padding: 10px;
+  height: 100px;
+  background-color: white;
+  display: inline-flex;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  justify-content: space-evenly;
+`;
+```
+
+### Image Styles
+
+```javascript
+const SquareImage = styled.img`
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+`;
+```
+
+### Text Styles
+
+```javascript
+const NameText = styled.p`
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+`;
+
+const SubText = styled.p`
+  color: #939292;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin: 0;
+`;
+
+const PickUpText = styled.p`
+  color: black;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin: 0;
+`;
+```
+
+### Form Styling
+
+```javascript
+const PurchaseForm = styled.form`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  flex-direction: row;
+  background: #fff;
+  margin-top: -20px;
+`;
+```
+
+<Note>
+A PurchaseForm component is defined but renders empty in the current implementation.
+</Note>
+
+## Implementation Example
+
+```javascript
+import { useState } from 'react';
+import Feed from './Feed';
+import PurchaseItem from './PurchaseItem';
+import { Routes, Route } from 'react-router-dom';
+
+function App() {
+  const [selectedItem, setSelectedItem] = useState(null);
+  
+  return (
+    <Routes>
+      <Route path="/feed" element={
+        <Feed modifyItem={setSelectedItem} />
+      } />
+      <Route path="/purchase-item" element={
+        <PurchaseItem item={selectedItem} />
+      } />
+    </Routes>
+  );
+}
+```
+
+## Data Flow
+
+1. User browses items in the Feed component
+2. User clicks "Buy Now" on an item
+3. Feed calls `modifyItem(items[index])`
+4. Feed navigates to `/purchase-item`
+5. PurchaseItem receives item via props
+6. PurchaseItem displays item details and payment options
+
+```javascript
+console.log(item);
+```
+
+The component logs the item object on render for debugging purposes.
+
+## Current Limitations
+
+<Warning>
+Several features need implementation for production use:
+
+1. **Payment Integration**: Payment buttons have no functionality
+2. **Dynamic Seller Info**: Seller name is hardcoded as "Tommy T"
+3. **Dynamic Pickup Details**: Location and time are hardcoded
+4. **Transaction Processing**: No backend integration for completing purchases
+5. **Error Handling**: No validation or error states
+6. **Loading States**: No feedback during payment processing
+</Warning>
+
+## Potential Improvements
+
+<Tip>
+To make this component production-ready:
+
+- Integrate with CashApp and PayPal payment APIs
+- Fetch dynamic seller information from user data
+- Allow sellers to set pickup locations and times
+- Implement transaction recording in the database
+- Add confirmation dialogs before purchase
+- Include order tracking functionality
+- Add ability to contact seller from purchase page
+</Tip>
+
+## Dependencies
+
+- `react` - Core React library with hooks (useState)
+- `styled-components` - CSS-in-JS styling for all component styles
+
+## Related Components
+
+- [Feed](/components/feed) - Item browsing and selection
+- [Message](/components/message) - Alternative action from feed (messaging)
+- [Profile](/components/profile) - View purchase history
+
+## Related Documentation
+
+- [Transactions](/features/transactions) - Transaction flow overview
+- [Item Listings](/features/item-listings) - Item data structure
+- [Messaging](/features/messaging) - Contacting sellers

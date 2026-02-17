@@ -1,0 +1,494 @@
+---
+title: 'User Profiles'
+description: 'View and manage user profiles with purchase and sales history'
+---
+
+## Overview
+
+User profiles display comprehensive information about marketplace members, including their purchase history, sales record, and ratings. Profiles help build trust in the community by showing transaction history and seller reputation.
+
+<Note>
+The Profile component showcases user information, completed purchases, and items sold with a clean, organized layout.
+</Note>
+
+## Profile Layout
+
+### Page Structure
+
+<CardGroup cols={3}>
+  <Card title="User Info" icon="user">
+    Profile photo, name, and basic details
+  </Card>
+  <Card title="Purchases" icon="shopping-bag">
+    History of items bought
+  </Card>
+  <Card title="Sales" icon="dollar-sign">
+    History of items sold
+  </Card>
+</CardGroup>
+
+## User Information Section
+
+The top section displays personal information and profile actions:
+
+```javascript Profile.js:14-27
+<InfoContainer>
+  <div style={{ display: "flex", gap: "20px" }}>
+    <CircularImage src={"/profile-photo.webp"} alt="Profile" />
+    <InfoDiv>
+      <NameText>Tommy Trojan</NameText>
+      <SubText>Class of 2023</SubText>
+      <SubText>4 items sold</SubText>
+    </InfoDiv>
+  </div>
+  <RatingDiv>
+    <RedText>Edit Profile</RedText>
+    <SubText>5.0 *</SubText>
+  </RatingDiv>
+</InfoContainer>
+```
+
+### Profile Elements
+
+<AccordionGroup>
+  <Accordion title="Profile Photo">
+    Circular avatar image (80x80px) for visual identification
+  </Accordion>
+  <Accordion title="User Name">
+    Display name shown prominently as main heading
+  </Accordion>
+  <Accordion title="Class Year">
+    Graduation year for USC community context
+  </Accordion>
+  <Accordion title="Sales Count">
+    Total number of items successfully sold
+  </Accordion>
+  <Accordion title="Rating">
+    Seller rating displayed as numerical score
+  </Accordion>
+  <Accordion title="Edit Profile">
+    Link/button to modify profile information
+  </Accordion>
+</AccordionGroup>
+
+## Purchase History
+
+The purchases section lists items the user has bought:
+
+```javascript Profile.js:28-40
+<PurchaseDiv>
+  <PurchaseHeaderContainer>Purchases</PurchaseHeaderContainer>
+  {items.map((item) => (
+    <SaleItemDiv>
+      <ItemImage src={"/heater.jpeg"} alt="Profile" />
+      <ItemDescription>
+        <ItemTitle>Space Heater</ItemTitle>
+        <SubText>Purchased Mar. 12, 2023</SubText>
+      </ItemDescription>
+      <MoneyText>$50</MoneyText>
+    </SaleItemDiv>
+  ))}
+</PurchaseDiv>
+```
+
+### Purchase Card Layout
+
+<Tabs>
+  <Tab title="Image">
+    100x100px square thumbnail of the purchased item
+  </Tab>
+  <Tab title="Details">
+    Item name and purchase date displayed in vertical layout
+  </Tab>
+  <Tab title="Price">
+    Transaction amount shown in top-right corner
+  </Tab>
+</Tabs>
+
+### Purchase Header Styling
+
+```javascript Profile.js:100-109
+const PurchaseHeaderContainer = styled.div`
+  width: 100%;
+  height: 30px;
+  background-color: #efd365;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.3em;
+  font-weight: bold;
+  padding-left: 3px;
+`;
+```
+
+<Note>
+The gold background (#efd365) provides visual distinction and matches USC's color scheme.
+</Note>
+
+## Sales History
+
+The sales section shows items the user has sold:
+
+```javascript Profile.js:41-53
+<SalesDiv>
+  <SalesHeaderContainer>Sales</SalesHeaderContainer>
+  {items.map((item) => (
+    <SaleItemDiv>
+      <ItemImage src={"/heater.jpeg"} alt="Profile" />
+      <ItemDescription>
+        <ItemTitle>Space Heater</ItemTitle>
+        <SubText>Sold Mar. 12, 2023</SubText>
+      </ItemDescription>
+      <MoneyText>$50</MoneyText>
+    </SaleItemDiv>
+  ))}
+</SalesDiv>
+```
+
+### Sales Header Styling
+
+```javascript Profile.js:113-115
+const SalesHeaderContainer = styled(PurchaseHeaderContainer)`
+  background-color: #bd7678;
+`;
+```
+
+<Tip>
+The different header color (#bd7678 - mauve) helps users quickly distinguish between purchases and sales sections.
+</Tip>
+
+## Data Generation
+
+Currently, the profile uses mock data for demonstration:
+
+```javascript Profile.js:9-10
+const repeatCount = 5;
+const items = Array.from({ length: repeatCount }, (_, index) => index);
+```
+
+<Warning>
+**Static Data:** The current implementation shows repeated placeholder items. In production, this should be replaced with actual user transaction data from the backend.
+</Warning>
+
+### Future Data Integration
+
+Recommended approach for real data:
+
+```javascript
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
+function Profile() {
+  const [purchases, setPurchases] = useState([]);
+  const [sales, setSales] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const userResponse = await axios.get('/api/user/profile');
+        setUserInfo(userResponse.data);
+        
+        const purchasesResponse = await axios.get('/api/user/purchases');
+        setPurchases(purchasesResponse.data);
+        
+        const salesResponse = await axios.get('/api/user/sales');
+        setSales(salesResponse.data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+    
+    fetchProfileData();
+  }, []);
+  
+  // ... rest of component
+}
+```
+
+## Styled Components
+
+The profile uses extensive styled-components for layout:
+
+<CodeGroup>
+
+```javascript Outer Container (Profile.js:67-75)
+const OuterContainer = styled.div`
+  width: 700px;
+  background-color: #efefee;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+```
+
+```javascript Sale Item (Profile.js:117-127)
+const SaleItemDiv = styled.div`
+  height: 140px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding-left: 20px;
+  background-color: white;
+  border-bottom: 1px solid grey;
+`;
+```
+
+```javascript Profile Image (Profile.js:163-168)
+const CircularImage = styled.img`
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+`;
+```
+
+</CodeGroup>
+
+## Typography Styles
+
+### Text Components
+
+```javascript Profile.js:128-162
+const NameText = styled.p`
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+`;
+
+const ItemTitle = styled.p`
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+  color: #777777;
+`;
+
+const SubText = styled.p`
+  color: #939292;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin: 0;
+`;
+
+const MoneyText = styled.p`
+  color: #939292;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin: 0;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+`;
+
+const RedText = styled.p`
+  color: red;
+  font-size: 1em;
+  :hover{
+    color:darkred;
+  }
+  position: relative;
+  bottom: 10px;
+`;
+```
+
+<Note>
+The MoneyText component uses absolute positioning to place prices consistently in the top-right of each transaction card.
+</Note>
+
+## Profile Sections Layout
+
+### Container Structure
+
+```javascript Profile.js:12-55
+<OuterContainer>
+  <InfoContainer>
+    {/* User information */}
+  </InfoContainer>
+  <PurchaseDiv>
+    {/* Purchase history */}
+  </PurchaseDiv>
+  <SalesDiv>
+    {/* Sales history */}
+  </SalesDiv>
+</OuterContainer>
+```
+
+### Visual Hierarchy
+
+<Steps>
+  <Step title="Profile Header">
+    User photo, name, and stats prominently displayed at top
+  </Step>
+  <Step title="Purchases Section">
+    Gold header followed by scrollable list of purchase cards
+  </Step>
+  <Step title="Sales Section">
+    Mauve header followed by scrollable list of sale cards
+  </Step>
+</Steps>
+
+## Edit Profile
+
+The "Edit Profile" link is styled for visibility:
+
+```javascript Profile.js:24
+<RedText>Edit Profile</RedText>
+```
+
+```javascript Profile.js:154-162
+const RedText = styled.p`
+  color: red;
+  font-size: 1em;
+  :hover{
+    color:darkred;
+  }
+  position: relative;
+  bottom: 10px;
+`;
+```
+
+<Warning>
+**Functionality Missing:** The "Edit Profile" text is currently not clickable and doesn't navigate to an edit page. This needs to be implemented.
+</Warning>
+
+### Recommended Implementation
+
+```javascript
+import { Link } from 'react-router-dom';
+
+// In JSX:
+<RedText as={Link} to="/edit-profile">
+  Edit Profile
+</RedText>
+
+// Or with click handler:
+<RedText onClick={() => navigate('/edit-profile')}>
+  Edit Profile
+</RedText>
+```
+
+## Rating Display
+
+User ratings appear in the top-right:
+
+```javascript Profile.js:25
+<SubText>5.0 *</SubText>
+```
+
+<Tip>
+Consider using a star icon component or emoji for better visual representation:
+
+```javascript
+<SubText>5.0 ⭐</SubText>
+// or
+<SubText>★★★★★ (5.0)</SubText>
+```
+</Tip>
+
+## Responsive Design
+
+The profile has a fixed width for consistency:
+
+```javascript Profile.js:67-68
+const OuterContainer = styled.div`
+  width: 700px;
+  // ...
+`;
+```
+
+<Warning>
+**Mobile Responsiveness:** The fixed 700px width may cause issues on smaller screens. Consider making it responsive:
+
+```javascript
+const OuterContainer = styled.div`
+  width: 100%;
+  max-width: 700px;
+  // ...
+`;
+```
+</Warning>
+
+## Integration Points
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="key" href="/features/authentication">
+    User must be logged in to view profiles
+  </Card>
+  <Card title="Transactions" icon="receipt" href="/features/transactions">
+    Completed purchases appear in history
+  </Card>
+  <Card title="Item Listings" icon="tags" href="/features/item-listings">
+    Created listings appear in sales section
+  </Card>
+  <Card title="Profile Component" icon="code" href="/components/profile">
+    Technical implementation details
+  </Card>
+</CardGroup>
+
+## Color Scheme
+
+| Element | Color | Purpose |
+|---------|-------|----------|
+| Background | #efefee | Subtle gray for reduced eye strain |
+| Purchase Header | #efd365 | Gold, matches USC branding |
+| Sales Header | #bd7678 | Mauve, distinguishes from purchases |
+| Card Background | white | Clean, readable content areas |
+| Edit Profile | red → darkred | Attention-grabbing action |
+| Subtext | #939292 | De-emphasized secondary info |
+
+## Future Enhancements
+
+<AccordionGroup>
+  <Accordion title="Real Transaction Data">
+    Integrate with backend to show actual purchases and sales
+  </Accordion>
+  <Accordion title="Detailed Ratings">
+    Show rating breakdown with reviews and comments
+  </Accordion>
+  <Accordion title="Profile Editing">
+    Implement full edit functionality for user information
+  </Accordion>
+  <Accordion title="Active Listings">
+    Add section for currently listed items
+  </Accordion>
+  <Accordion title="Wish List">
+    Allow users to save items they're interested in
+  </Accordion>
+  <Accordion title="Transaction Details">
+    Click on items to see full transaction history
+  </Accordion>
+  <Accordion title="Export History">
+    Download purchase/sales history as CSV
+  </Accordion>
+</AccordionGroup>
+
+## Accessibility
+
+<Note>
+**Accessibility Improvements Needed:**
+- Add alt text to all images
+- Use semantic HTML elements
+- Ensure proper heading hierarchy
+- Add ARIA labels for interactive elements
+- Test with screen readers
+- Maintain color contrast ratios (especially for SubText)
+</Note>
+
+## Related Documentation
+
+- [Authentication](/features/authentication) - User login system
+- [Transactions](/features/transactions) - Purchase flow details
+- [Item Listings](/features/item-listings) - How items get listed
+- [Profile Component](/components/profile) - Component implementation
+- [Backend Integration](/development/backend-integration) - API setup
+
+## Next Steps
+
+From the profile page, users can:
+1. Edit their profile information (future feature)
+2. View details of past [transactions](/features/transactions)
+3. Return to the [marketplace feed](/features/marketplace-feed)
+4. [Create new listings](/features/item-listings) to sell

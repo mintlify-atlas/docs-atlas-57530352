@@ -1,0 +1,382 @@
+---
+title: 'Item Listings'
+description: 'Create and manage marketplace item listings'
+---
+
+## Overview
+
+The item listing feature allows sellers to create new product listings for the marketplace. Users can add item details including title, description, price, quantity, location, and images.
+
+<Note>
+Item listings are created through the CreateSale component and stored via the AddItemServlet backend endpoint.
+</Note>
+
+## Creating Listings
+
+### Form Structure
+
+The CreateSale component provides a comprehensive form for item details:
+
+<CardGroup cols={3}>
+  <Card title="Basic Info" icon="info">
+    Title and description of the item
+  </Card>
+  <Card title="Pricing" icon="dollar-sign">
+    Price and quantity fields
+  </Card>
+  <Card title="Details" icon="location-dot">
+    Location and image URL
+  </Card>
+</CardGroup>
+
+### Form Fields
+
+The listing form collects the following information:
+
+```javascript CreateSale.js:51-93
+<form onSubmit={handleSubmit}>
+  <label htmlFor="title">Title</label>
+  <input
+    onChange={(e) => setTitle(e.target.value)}
+    value={title}
+    type="text"
+    id="title"
+    name="title"
+  />
+
+  <label htmlFor="description">Description</label>
+  <textarea
+    onChange={(e) => setDescription(e.target.value)}
+    value={description}
+    id="description"
+    name="description"
+  ></textarea>
+
+  <label htmlFor="quantity">Quantity</label>
+  <input type="text" id="quantity" name="quantity" />
+
+  <label htmlFor="location">Location</label>
+  <input type="text" id="location" name="location" />
+
+  <label htmlFor="price">Price</label>
+  <input
+    onChange={(e) => setPrice(e.target.value)}
+    value={price}
+    type="text"
+    id="price"
+    name="price"
+  />
+
+  <label htmlFor="image">Image</label>
+  <input
+    onChange={(e) => setImage(e.target.value)}
+    value={image}
+    type="text"
+    id="image"
+    name="image"
+  />
+
+  <button type="submit">Create Sale</button>
+</form>
+```
+
+<AccordionGroup>
+  <Accordion title="Title Field">
+    Short name for the item, stored in `item_name` database field
+  </Accordion>
+  <Accordion title="Description Field">
+    Detailed description using textarea for multi-line input
+  </Accordion>
+  <Accordion title="Quantity Field">
+    Number of items available (currently not connected to backend)
+  </Accordion>
+  <Accordion title="Location Field">
+    Pickup or shipping location (currently not connected to backend)
+  </Accordion>
+  <Accordion title="Price Field">
+    Item price in dollars
+  </Accordion>
+  <Accordion title="Image Field">
+    URL to item image (stored as `image_url`)
+  </Accordion>
+</AccordionGroup>
+
+## State Management
+
+The component uses React hooks to manage form state:
+
+```javascript CreateSale.js:13-18
+const [title, setTitle] = useState("");
+const [description, setDescription] = useState("");
+const [image, setImage] = useState("");
+const [price, setPrice] = useState("");
+const [error, setError] = useState("");
+const navigate = useNavigate();
+```
+
+<Tip>
+Each field has its own state variable and onChange handler for controlled component behavior.
+</Tip>
+
+## Form Submission
+
+When users submit the form, item data is sent to the backend:
+
+```javascript CreateSale.js:20-45
+const handleSubmit = async (event) => {
+  event.preventDefault();
+
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/Final_Project/AddItemServlet",
+      `item_name=${encodeURIComponent(
+        title
+      )}&item_description=${encodeURIComponent(
+        description
+      )}&image_url=${encodeURIComponent(image)}&price=${encodeURIComponent(
+        price
+      )}`,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+    navigate("/feed");
+    console.log(response.data);
+  } catch (error) {
+    console.error("Error during login request:", error);
+    setError("An error occurred. Please try again.");
+  }
+};
+```
+
+### Submission Flow
+
+<Steps>
+  <Step title="Prevent Default">
+    `event.preventDefault()` stops form from reloading the page
+  </Step>
+  <Step title="Encode Data">
+    All fields are URL-encoded to prevent injection attacks
+  </Step>
+  <Step title="POST Request">
+    Data sent to AddItemServlet as application/x-www-form-urlencoded
+  </Step>
+  <Step title="Success Navigation">
+    User redirected to /feed to see their new listing
+  </Step>
+  <Step title="Error Handling">
+    Errors logged and displayed to user
+  </Step>
+</Steps>
+
+<Warning>
+**Data Inconsistency:** The form includes quantity and location fields, but these are not sent to the backend in the current implementation (CreateSale.js:26-31).
+</Warning>
+
+## Styling
+
+The component uses styled-components and custom CSS:
+
+```javascript CreateSale.js:8-10
+const StyledCreateSale = styled.div`
+  margin-top: 30px;
+`;
+```
+
+Additional styles are imported from CSS files:
+
+```javascript CreateSale.js:4-5
+import "./main.css";
+import "./create-sale.css";
+```
+
+### Container Structure
+
+```javascript CreateSale.js:48-95
+<StyledCreateSale>
+  <div className="v1_2">
+    <span className="marketplace">Add Item</span>
+    <form onSubmit={handleSubmit}>
+      {/* Form fields */}
+    </form>
+  </div>
+</StyledCreateSale>
+```
+
+## Backend Integration
+
+### API Endpoint
+
+Items are submitted to the AddItemServlet:
+
+<ParamField path="endpoint" type="string">
+  `http://localhost:8080/Final_Project/AddItemServlet`
+</ParamField>
+
+### Request Format
+
+<CodeGroup>
+
+```javascript POST Body
+item_name=Space%20Heater&item_description=Barely%20used%20space%20heater&image_url=https%3A%2F%2Fexample.com%2Fimage.jpg&price=50
+```
+
+```plaintext Headers
+Content-Type: application/x-www-form-urlencoded
+```
+
+</CodeGroup>
+
+### Data Mapping
+
+| Form Field | Backend Parameter | Type |
+|------------|------------------|------|
+| title | item_name | string |
+| description | item_description | string |
+| image | image_url | string (URL) |
+| price | price | string/number |
+| quantity | *not sent* | string |
+| location | *not sent* | string |
+
+<Note>
+Quantity and location fields are displayed in the UI but not currently sent to the backend.
+</Note>
+
+## Listing Lifecycle
+
+<Tabs>
+  <Tab title="Creation">
+    1. User navigates to Create Sale page
+    2. Fills out item details
+    3. Submits form
+    4. Backend creates database entry
+    5. User redirected to feed
+  </Tab>
+  <Tab title="Display">
+    1. Item appears in marketplace feed
+    2. Other users can view details
+    3. Message and Buy Now buttons enabled
+  </Tab>
+  <Tab title="Purchase">
+    1. Buyer clicks Buy Now
+    2. Transaction initiated
+    3. Item status may be updated
+    4. Appears in buyer's purchase history
+  </Tab>
+</Tabs>
+
+## Validation
+
+<Warning>
+The current implementation lacks client-side validation. Consider adding:
+- Required field validation
+- Price format validation (numeric, positive)
+- Image URL validation
+- Character limits for title/description
+</Warning>
+
+**Recommended validation example:**
+
+```javascript
+const validateForm = () => {
+  if (!title.trim()) {
+    setError("Title is required");
+    return false;
+  }
+  if (!price || isNaN(price) || parseFloat(price) <= 0) {
+    setError("Valid price is required");
+    return false;
+  }
+  if (!image.trim() || !isValidUrl(image)) {
+    setError("Valid image URL is required");
+    return false;
+  }
+  return true;
+};
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  if (!validateForm()) return;
+  // ... rest of submit logic
+};
+```
+
+## Error Handling
+
+Errors are captured and logged:
+
+```javascript CreateSale.js:42-44
+catch (error) {
+  console.error("Error during login request:", error);
+  setError("An error occurred. Please try again.");
+}
+```
+
+<Tip>
+The error state variable is set but not currently displayed in the UI. Add error display in the JSX:
+
+```jsx
+{error && <div className="error-message">{error}</div>}
+```
+</Tip>
+
+## Related Documentation
+
+<CardGroup cols={2}>
+  <Card title="Marketplace Feed" icon="list" href="/features/marketplace-feed">
+    See how listings appear in the feed
+  </Card>
+  <Card title="CreateSale Component" icon="plus" href="/components/create-sale">
+    Component implementation details
+  </Card>
+  <Card title="Items API" icon="database" href="/api/items">
+    Backend API reference for items
+  </Card>
+  <Card title="Backend Integration" icon="server" href="/development/backend-integration">
+    Learn about servlet configuration
+  </Card>
+</CardGroup>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Image URLs">
+    Use reliable image hosting services and validate URLs before submission
+  </Accordion>
+  <Accordion title="Descriptions">
+    Provide detailed, accurate descriptions to help buyers make informed decisions
+  </Accordion>
+  <Accordion title="Pricing">
+    Set competitive prices and include information about condition
+  </Accordion>
+  <Accordion title="Location">
+    Although not currently saved, specify pickup locations for buyer convenience
+  </Accordion>
+</AccordionGroup>
+
+## Future Enhancements
+
+<CardGroup cols={2}>
+  <Card title="Image Upload" icon="upload">
+    Support direct image uploads instead of URLs
+  </Card>
+  <Card title="Multiple Images" icon="images">
+    Allow sellers to upload multiple product photos
+  </Card>
+  <Card title="Categories" icon="tags">
+    Add category selection for better organization
+  </Card>
+  <Card title="Inventory Management" icon="boxes-stacked">
+    Connect quantity field to backend for stock tracking
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+After creating a listing:
+1. View it in the [marketplace feed](/features/marketplace-feed)
+2. Monitor [messages](/features/messaging) from interested buyers
+3. Complete [transactions](/features/transactions) when items sell
+4. Track sales in your [user profile](/features/user-profiles)

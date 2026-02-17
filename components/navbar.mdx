@@ -1,0 +1,132 @@
+---
+title: "Navbar Component"
+description: "Navigation bar component providing site-wide navigation and authentication state management for the Trojan Marketplace."
+---
+
+## Overview
+
+The Navbar component is a fixed-position navigation bar that provides consistent site-wide navigation throughout the Trojan Marketplace application. It displays different navigation options based on the user's authentication status and includes the USC branding and logo.
+
+## Location
+
+`src/Navbar.js`
+
+## Props
+
+<ParamField path="loggedIn" type="boolean" required>
+  Determines whether the user is currently authenticated. When `true`, displays authenticated navigation links (Profile, Create Sale, Feed). When `false`, displays only the Login link.
+</ParamField>
+
+## Features
+
+### Conditional Navigation
+
+The Navbar dynamically renders different navigation links based on authentication state:
+
+**Authenticated Users:**
+- Profile
+- Create Sale
+- Feed
+- Logged In (status indicator)
+
+**Unauthenticated Users:**
+- Login
+
+### Fixed Positioning
+
+The component uses a fixed position at the top of the viewport with a placeholder element to prevent content overlap:
+
+```javascript
+const StyledNavbar = styled.div`
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+`;
+
+const NavPlaceHolder = styled.div`
+  height: 44px;
+  width: 100vw;
+  background-color: white;
+`;
+```
+
+### USC Branding
+
+Displays the USC logo and "Trojan Marketplace" title with hover effects:
+
+```javascript
+<div className="navbar-brand">
+  <img
+    src="/white-usc.png"
+    alt="USC logo"
+    style={{ "object-fit": "contain" }}
+  />
+  <h1>
+    <LinkHeader to="/">Trojan Marketplace</LinkHeader>
+  </h1>
+</div>
+```
+
+## Styling
+
+The component uses styled-components with USC cardinal red (`#900`) as the primary background color:
+
+- **Background**: Cardinal red (#900)
+- **Text**: White (#fff)
+- **Hover**: Light gray (#ccc)
+- **Logo width**: 40px
+- **Padding**: 10px 20px
+
+## Implementation Example
+
+```javascript
+import Navbar from './Navbar';
+
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  return (
+    <>
+      <Navbar loggedIn={isLoggedIn} />
+      {/* Rest of application */}
+    </>
+  );
+}
+```
+
+## Navigation Structure
+
+The component integrates with React Router using the `Link` component for client-side routing:
+
+```javascript
+{loggedIn ? (
+  <>
+    <Link className="nav-link" to="/profile">Profile</Link>
+    <Link className="nav-link" to="/create-sale">Create Sale</Link>
+    <Link className="nav-link" to="/feed">Feed</Link>
+    <Link className="nav-link" to="/login">Logged In</Link>
+  </>
+) : (
+  <>
+    <Link className="nav-link" to="/login">Login</Link>
+  </>
+)}
+```
+
+## Dependencies
+
+- `react` - Core React library
+- `styled-components` - CSS-in-JS styling
+- `react-router-dom` - Client-side routing
+
+## Related Components
+
+- [Home](/components/home) - Landing page component
+- [Profile](/components/profile) - User profile page
+- [Feed](/components/feed) - Marketplace item feed
+- [Create Sale](/components/create-sale) - Item listing creation
+
+## Related Documentation
+
+- [Authentication](/features/authentication) - User authentication flow
+- [Routing](/api/routing) - Application routing configuration

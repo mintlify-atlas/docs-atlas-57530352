@@ -1,0 +1,121 @@
+---
+title: 'Authentication API'
+description: 'Endpoints for user authentication and account management'
+---
+
+## Overview
+
+The Authentication API provides endpoints for user login and account creation in the Trojan Marketplace application.
+
+## Login
+
+<RequestExample>
+```javascript Login.js
+const response = await axios.post(
+  "http://localhost:8080/Final_Project/LoginServlet",
+  `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+  {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  }
+);
+```
+</RequestExample>
+
+### Endpoint
+
+`POST /Final_Project/LoginServlet`
+
+Authenticates a user with their email and password credentials.
+
+### Request Parameters
+
+<ParamField body="username" type="string" required>
+  User's email address
+</ParamField>
+
+<ParamField body="password" type="string" required>
+  User's password
+</ParamField>
+
+### Headers
+
+<ParamField header="Content-Type" type="string" required>
+  Must be `application/x-www-form-urlencoded`
+</ParamField>
+
+### Response
+
+<ResponseField name="response" type="boolean">
+  Returns `true` if authentication is successful, `false` otherwise
+</ResponseField>
+
+### Example Response
+
+```json
+true
+```
+
+### Implementation Details
+
+The login implementation can be found in `/workspace/source/src/Login.js:79-86`. Upon successful authentication, the user is redirected to the feed page.
+
+## Create Account
+
+<RequestExample>
+```javascript CreateAccount.js
+const response = await axios.post(
+  "http://localhost:8080/Final_Project/CreateAccountServlet",
+  `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+  {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  }
+);
+```
+</RequestExample>
+
+### Endpoint
+
+`POST /Final_Project/CreateAccountServlet`
+
+Creates a new user account in the marketplace.
+
+### Request Parameters
+
+<ParamField body="username" type="string" required>
+  User's email address for the new account
+</ParamField>
+
+<ParamField body="password" type="string" required>
+  Password for the new account
+</ParamField>
+
+### Headers
+
+<ParamField header="Content-Type" type="string" required>
+  Must be `application/x-www-form-urlencoded`
+</ParamField>
+
+### Response
+
+<ResponseField name="response" type="boolean">
+  Returns `true` if account creation is successful, `false` otherwise
+</ResponseField>
+
+### Example Response
+
+```json
+true
+```
+
+### Implementation Details
+
+The account creation implementation can be found in `/workspace/source/src/CreateAccount.js:85-95`. Upon successful account creation, the user is redirected to the login page.
+
+## Related Pages
+
+- [User Profiles Feature](/features/user-profiles)
+- [Authentication Feature](/features/authentication)

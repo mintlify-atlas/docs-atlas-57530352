@@ -1,0 +1,241 @@
+---
+title: "Create Sale Component"
+description: "Form component for creating new item listings in the Trojan Marketplace."
+---
+
+## Overview
+
+The CreateSale component provides a form interface for users to list new items for sale on the Trojan Marketplace. It captures item details including title, description, price, quantity, location, and image URL, then submits the data to the backend.
+
+## Location
+
+`src/CreateSale.js`
+
+## Props
+
+This component does not accept any props.
+
+## State Management
+
+### Form State
+
+The component manages multiple state variables for form inputs:
+
+<ParamField path="title" type="string">
+  Item name/title entered by the user
+</ParamField>
+
+<ParamField path="description" type="string">
+  Detailed description of the item
+</ParamField>
+
+<ParamField path="image" type="string">
+  URL to the item image
+</ParamField>
+
+<ParamField path="price" type="string">
+  Item price (submitted as string)
+</ParamField>
+
+<ParamField path="error" type="string">
+  Error message displayed if submission fails
+</ParamField>
+
+## Features
+
+### Form Inputs
+
+The component provides a comprehensive form with the following fields:
+
+1. **Title** (text input) - Required for backend
+2. **Description** (textarea) - Required for backend
+3. **Quantity** (text input) - Currently not submitted to backend
+4. **Location** (text input) - Currently not submitted to backend
+5. **Price** (text input) - Required for backend
+6. **Image** (text input) - Image URL, required for backend
+
+```javascript
+<form onSubmit={handleSubmit}>
+  <label htmlFor="title">Title</label>
+  <input
+    onChange={(e) => setTitle(e.target.value)}
+    value={title}
+    type="text"
+    id="title"
+    name="title"
+  />
+
+  <label htmlFor="description">Description</label>
+  <textarea
+    onChange={(e) => setDescription(e.target.value)}
+    value={description}
+    id="description"
+    name="description"
+  ></textarea>
+
+  <label htmlFor="price">Price</label>
+  <input
+    onChange={(e) => setPrice(e.target.value)}
+    value={price}
+    type="text"
+    id="price"
+    name="price"
+  />
+
+  <label htmlFor="image">Image</label>
+  <input
+    onChange={(e) => setImage(e.target.value)}
+    value={image}
+    type="text"
+    id="image"
+    name="image"
+  />
+
+  <button type="submit">Create Sale</button>
+</form>
+```
+
+### Form Submission
+
+When the form is submitted, the component:
+
+1. Prevents default form behavior
+2. Sends POST request to AddItemServlet with form data
+3. Navigates to feed on success
+4. Displays error message on failure
+
+```javascript
+const handleSubmit = async (event) => {
+  event.preventDefault();
+
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/Final_Project/AddItemServlet",
+      `item_name=${encodeURIComponent(
+        title
+      )}&item_description=${encodeURIComponent(
+        description
+      )}&image_url=${encodeURIComponent(image)}&price=${encodeURIComponent(
+        price
+      )}`,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+    navigate("/feed");
+    console.log(response.data);
+  } catch (error) {
+    console.error("Error during login request:", error);
+    setError("An error occurred. Please try again.");
+  }
+};
+```
+
+### API Integration
+
+The component submits data to the backend using:
+
+- **Endpoint**: `http://localhost:8080/Final_Project/AddItemServlet`
+- **Method**: POST
+- **Content-Type**: `application/x-www-form-urlencoded`
+- **Parameters**:
+  - `item_name` - Item title
+  - `item_description` - Item description
+  - `image_url` - Image URL
+  - `price` - Item price
+
+<Note>
+The quantity and location fields are rendered in the form but not currently submitted to the backend. This may indicate incomplete functionality or fields reserved for future use.
+</Note>
+
+### Post-Submission Navigation
+
+On successful submission, the component navigates to the feed:
+
+```javascript
+navigate("/feed");
+```
+
+## Styling
+
+The component uses a combination of styled-components and external CSS:
+
+```javascript
+const StyledCreateSale = styled.div`
+  margin-top: 30px;
+`;
+```
+
+Additional styles are imported from:
+- `./main.css` - Shared application styles
+- `./create-sale.css` - Component-specific styles
+
+## Implementation Example
+
+```javascript
+import CreateSale from './CreateSale';
+import { Route } from 'react-router-dom';
+
+function App() {
+  return (
+    <Route path="/create-sale" element={<CreateSale />} />
+  );
+}
+```
+
+## Error Handling
+
+The component provides basic error handling:
+
+```javascript
+catch (error) {
+  console.error("Error during login request:", error);
+  setError("An error occurred. Please try again.");
+}
+```
+
+<Warning>
+The error message references "login request" in the console.log, which appears to be a copy-paste error from another component. The error state is set but not displayed in the UI.
+</Warning>
+
+## Current Limitations
+
+1. **No client-side validation** - Form can be submitted with empty fields
+2. **Error display missing** - Error state exists but isn't rendered in the UI
+3. **Unused fields** - Quantity and location fields don't submit to backend
+4. **Image upload** - Only accepts URLs, no file upload capability
+5. **Price validation** - No formatting or numeric validation for price input
+
+## Potential Improvements
+
+<Tip>
+For production use, consider adding:
+- Required field validation
+- Error message display in the UI
+- Price formatting and validation
+- Image file upload instead of URL input
+- Loading state during submission
+- Success confirmation message
+- Integration of quantity and location fields with backend
+</Tip>
+
+## Dependencies
+
+- `react` - Core React library with hooks (useState, useEffect)
+- `axios` - HTTP client for API requests
+- `styled-components` - CSS-in-JS styling
+- `react-router-dom` - Navigation with useNavigate hook
+- `./main.css` - Shared styles
+- `./create-sale.css` - Component-specific styles
+
+## Related Components
+
+- [Feed](/components/feed) - Destination after successful submission
+- [Navbar](/components/navbar) - Navigation to Create Sale page
+
+## Related Documentation
+
+- [Item Listings](/features/item-listings) - Item creation and management
+- [Items API](/api/items) - Backend item endpoints
